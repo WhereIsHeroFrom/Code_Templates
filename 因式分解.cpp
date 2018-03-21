@@ -1,3 +1,12 @@
+/*
+å› å¼åˆ†è§£
+    ç´ æ•°ç­›é€‰åï¼Œè¯•é™¤sqrt(n)ä»¥å†…çš„æ‰€æœ‰ç´ æ•°ï¼Œå±‚å±‚çº¦å»ã€‚
+
+Author: WhereIsHeroFrom
+Update Time: 2018-3-21
+Algorithm Complexity: O(sqrt(n))
+*/
+
 #include <iostream>
 #include <cstring>
 #include <vector>
@@ -22,7 +31,7 @@ struct factor {
 	}
 };
 
-// ¶ò¶û¶àÈûËØÊıÉ¸Ñ¡·¨ 
+// å„å°”å¤šå¡ç´ æ•°ç­›é€‰æ³• 
 void Eratosthenes() {
 	memset(notprime, false, sizeof(notprime));
 	notprime[1] = true;
@@ -30,7 +39,7 @@ void Eratosthenes() {
 	for(int i = 2; i < MAXP; i++) {
 		if( !notprime[i] ) {
 			primes[ ++primes[0] ] = i;
-		    //ĞèÒª×¢Òâi*i³¬³öÕûĞÍºó±ä³É¸ºÊıµÄÎÊÌâ£¬ËùÒÔ×ª»¯³É __int64 
+		    //éœ€è¦æ³¨æ„i*iè¶…å‡ºæ•´å‹åå˜æˆè´Ÿæ•°çš„é—®é¢˜ï¼Œæ‰€ä»¥è½¬åŒ–æˆ __int64 
 			for(LL j = (LL)i*i; j < MAXP; j += i) {
 				notprime[j] = true;
 			}
@@ -38,16 +47,16 @@ void Eratosthenes() {
 	}
 }
 
-// ÒòÊ½·Ö½â - ½«n·Ö½â³ÉËØÊıÃİ³Ë»ıµÄĞÎÊ½
-// ¾ÙÀı£º
+// å› å¼åˆ†è§£ - å°†nåˆ†è§£æˆç´ æ•°å¹‚ä¹˜ç§¯çš„å½¢å¼
+// ä¸¾ä¾‹ï¼š
 // 252 = (2^2) * (3^2) * (7^1) 
-// Ôò ans = [ (2,2), (3,2), (7,1) ]
+// åˆ™ ans = [ (2,2), (3,2), (7,1) ]
 void Factorization(int n, vector <factor>& ans) {
 	ans.clear();
 	if(n == 1) {
 		return ;
 	}
-	// ËØÊıÊÔ³ı 
+	// ç´ æ•°è¯•é™¤ 
 	for(int i = 1; i <= primes[0]; i++) {
 		if(n % primes[i] == 0) {
 			factor f(primes[i], 0);
@@ -61,7 +70,7 @@ void Factorization(int n, vector <factor>& ans) {
 			return ;
 		}
 	}
-	// Â©ÍøÖ®ËØÊı£¬ ¼´´óÓÚMAXPµÄËØÊı£¬×î¶à1¸ö 
+	// æ¼ç½‘ä¹‹ç´ æ•°ï¼Œ å³å¤§äºMAXPçš„ç´ æ•°ï¼Œæœ€å¤š1ä¸ª 
 	ans.push_back( factor(n, 1) );
 }
 
