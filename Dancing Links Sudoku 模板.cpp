@@ -1,3 +1,25 @@
+/*
+æ•°ç‹¬çš„DancingLinksæ„é€ 
+
+1) æ¯ä¸ªæ ¼å­åªèƒ½å¡«1ä¸ªæ•°ï¼›
+2) æ¯è¡Œçš„æ•°å­—é›†åˆä¸º[1, N^2]ï¼Œä¸”ä¸èƒ½é‡å¤ï¼›
+3) æ¯åˆ—çš„æ•°å­—é›†åˆä¸º[1, N^2]ï¼Œä¸”ä¸èƒ½é‡å¤ï¼›
+4) æ¯ä¸ªâ€œå®«â€çš„æ•°å­—é›†åˆä¸º[1, N^2]ï¼Œä¸”ä¸èƒ½é‡å¤ï¼ˆå…¶ä¸­â€œå®«â€çš„æ„æ€å°±æ˜¯NÃ—Nçš„æ ¼å­ã€‚å¯¹äºN=3çš„æƒ…å†µï¼Œå°±æ˜¯â€œä¹å®«æ ¼â€ï¼‰ï¼›
+
+è½¬å˜ä¸ºç²¾ç¡®è¦†ç›–é—®é¢˜ã€‚è¡Œä»£è¡¨é—®é¢˜çš„æ‰€æœ‰æƒ…å†µï¼Œåˆ—ä»£è¡¨é—®é¢˜çš„çº¦æŸæ¡ä»¶ã€‚
+æ¯ä¸ªæ ¼å­èƒ½å¤Ÿå¡«çš„æ•°å­—ä¸º[1,9]ï¼Œå¹¶ä¸”æ€»å…±æœ‰9Ã—9(å³3^2Ã—3^2)ä¸ªæ ¼å­ï¼Œæ‰€ä»¥æ€»çš„æƒ…å†µæ•°ä¸º729ç§ã€‚ä¹Ÿå°±æ˜¯DancingLinksçš„è¡Œä¸º729è¡Œã€‚
+
+åˆ—åˆ™åˆ†ä¸ºå››ç§ï¼š
+1) [0, 81)åˆ—  åˆ†åˆ«å¯¹åº”äº†81ä¸ªæ ¼å­æ˜¯å¦è¢«æ”¾ç½®äº†æ•°å­—ã€‚
+2) [82, 2*81)åˆ—  åˆ†åˆ«å¯¹åº”äº†9è¡Œï¼Œæ¯è¡Œ[1, 9]ä¸ªæ•°å­—çš„æ”¾ç½®æƒ…å†µï¼›
+3) [2*81, 3*81)åˆ— åˆ†åˆ«å¯¹åº”äº†9åˆ—ï¼Œæ¯åˆ—[1, 9]ä¸ªæ•°å­—çš„æ”¾ç½®æƒ…å†µï¼›
+4) [3*81, 4*81)åˆ— åˆ†åˆ«å¯¹åº”äº†9ä¸ªâ€œå®«â€ï¼Œæ¯â€œå®«â€[1, 9]ä¸ªæ•°å­—çš„æ”¾ç½®æƒ…å†µï¼›
+
+Author: WhereIsHeroFrom
+Update Time: 2018-3-21
+Algorithm Complexity: éå¤šé¡¹å¼ç®—æ³•
+*/
+
 #include <iostream>
 #include <cmath>
 #include <cstring>
@@ -13,27 +35,27 @@ using namespace std;
 #define INT64 __int64 
 
 enum eCoverType {
-	ECT_EXACT = 0,       // ¾«È·¸²¸Ç
-	ECT_REPEAT = 1,      // ÖØ¸´¸²¸Ç
+	ECT_EXACT = 0,       // ç²¾ç¡®è¦†ç›–
+	ECT_REPEAT = 1,      // é‡å¤è¦†ç›–
 };
 
 enum eDanceType {
-	EDT_GET_ONE_SOLUTION = 0,    // »ñÈ¡Ò»¸ö½â
-	EDT_JUDGE_MULTIPLE = 1,      // ÅĞ¶ÏÊÇ·ñ¶à¸ö½â
+	EDT_GET_ONE_SOLUTION = 0,    // è·å–ä¸€ä¸ªè§£
+	EDT_JUDGE_MULTIPLE = 1,      // åˆ¤æ–­æ˜¯å¦å¤šä¸ªè§£
 };
 
 /*
 DLXNode
-	left, right        Ê®×Ö½»²æË«ÏòÑ­»·Á´±íµÄ×óÓÒÖ¸Õë
-	up, down           Ê®×Ö½»²æË«ÏòÑ­»·Á´±íµÄÉÏÏÂÖ¸Õë
+	left, right        åå­—äº¤å‰åŒå‘å¾ªç¯é“¾è¡¨çš„å·¦å³æŒ‡é’ˆ
+	up, down           åå­—äº¤å‰åŒå‘å¾ªç¯é“¾è¡¨çš„ä¸Šä¸‹æŒ‡é’ˆ
 
-	<ÓÃÓÚÁĞÊ×½áµã>
-	colSum             ÁĞµÄ½áµã×ÜÊı
-	colIdx             ÁĞµÄ±àºÅ
+	<ç”¨äºåˆ—é¦–ç»“ç‚¹>
+	colSum             åˆ—çš„ç»“ç‚¹æ€»æ•°
+	colIdx             åˆ—çš„ç¼–å·
 		
-	<ÓÃÓÚĞĞÊ×½áµã/ÔªËØ½áµã>
-	colHead            Ö¸ÏòÁĞÊ×½áµãµÄÖ¸Õë
-	rowIdx             DLXNode½áµãÔÚÔ­¾ØÕóÖĞµÄĞĞ±êºÅ
+	<ç”¨äºè¡Œé¦–ç»“ç‚¹/å…ƒç´ ç»“ç‚¹>
+	colHead            æŒ‡å‘åˆ—é¦–ç»“ç‚¹çš„æŒ‡é’ˆ
+	rowIdx             DLXNodeç»“ç‚¹åœ¨åŸçŸ©é˜µä¸­çš„è¡Œæ ‡å·
 */
 class DLXNode {
 public:
@@ -50,7 +72,7 @@ public:
 	}data;
 public:
 	//////////////////////////////////////////////////////////
-	// »ñÈ¡/ÉèÖÃ ½Ó¿Ú
+	// è·å–/è®¾ç½® æ¥å£
 	void resetCol(int colIdx);
 	void resetColSum();
 	void updateColSum(int delta);
@@ -66,7 +88,7 @@ public:
 	int getRowIdx();
 
 	///////////////////////////////////////////////////////////
-	// ËÑË÷Çó½âÓÃµ½µÄ½Ó¿Ú
+	// æœç´¢æ±‚è§£ç”¨åˆ°çš„æ¥å£
 	void appendToCol(DLXNode *colPtr);
 	void appendToRow(DLXNode *rowPtr);
 
@@ -79,9 +101,9 @@ public:
 };
 
 void DLXNode::resetCol(int colIdx) {
-	// IDA*µÄÊ±ºòĞèÒªÓÃµ½ÁĞÏÂ±ê½øĞĞhash
+	// IDA*çš„æ—¶å€™éœ€è¦ç”¨åˆ°åˆ—ä¸‹æ ‡è¿›è¡Œhash
 	setColIdx(colIdx);
-	// ³õÊ¼»¯Ã¿ÁĞ½áµã¸öÊı½ÔÎª0
+	// åˆå§‹åŒ–æ¯åˆ—ç»“ç‚¹ä¸ªæ•°çš†ä¸º0
 	resetColSum();
 }
 void DLXNode::resetColSum() {
@@ -120,23 +142,23 @@ int DLXNode::getRowIdx() {
 }
 
 void DLXNode::appendToCol(DLXNode * colPtr) {
-	// ¸³ÖµÁĞÊ×Ö¸Õë
+	// èµ‹å€¼åˆ—é¦–æŒ‡é’ˆ
 	setColHead(colPtr);
 
-	// Õâ¼¸¾äÒªÇó²åÈë½áµãË³Ğò±£Ö¤ÁĞµİÔö£¬·ñÔò»áµ¼ÖÂÂÒĞò£¨Ã¿´Î²åÔÚÒ»ÁĞµÄ×îºó£©
+	// è¿™å‡ å¥è¦æ±‚æ’å…¥ç»“ç‚¹é¡ºåºä¿è¯åˆ—é€’å¢ï¼Œå¦åˆ™ä¼šå¯¼è‡´ä¹±åºï¼ˆæ¯æ¬¡æ’åœ¨ä¸€åˆ—çš„æœ€åï¼‰
 	up = colPtr->up;
 	down = colPtr;
 	colPtr->up = colPtr->up->down = this;
 
-	// ÁĞÔªËØ++
+	// åˆ—å…ƒç´ ++
 	colPtr->updateColSum(1);
 }
 
 void DLXNode::appendToRow(DLXNode* rowPtr) {
-	// ¸³ÖµĞĞ±àºÅ
+	// èµ‹å€¼è¡Œç¼–å·
 	setRowIdx(rowPtr->getRowIdx());
 
-	// Õâ¼¸¾äÒªÇó²åÈë½áµãË³Ğò±£Ö¤ĞĞµİÔö£¨Ã¿´Î²åÔÚÒ»ĞĞµÄ×îºó£©
+	// è¿™å‡ å¥è¦æ±‚æ’å…¥ç»“ç‚¹é¡ºåºä¿è¯è¡Œé€’å¢ï¼ˆæ¯æ¬¡æ’åœ¨ä¸€è¡Œçš„æœ€åï¼‰
 	left =  rowPtr->left;
 	right = rowPtr;
 	rowPtr->left = rowPtr->left->right = this;
@@ -165,32 +187,32 @@ void DLXNode::resumeFromRow() {
 }
 
 /*
-DLX £¨µ¥Àı£©
-	head               head Ö»ÓĞ×óÓÒ£¨left¡¢right£©Á½¸öÖ¸ÕëÓĞĞ§£¬Ö¸ÏòÁĞÊ×
-	rowCount, colCount ±¾´ÎÑùÀı¾ØÕóµÄ¹æÄ££¨ĞĞÁĞÊı£©
-	row[]              ĞĞÊ×½áµãÁĞ±í
-	col[]              ÁĞÊ×½áµãÁĞ±í
+DLX ï¼ˆå•ä¾‹ï¼‰
+	head               head åªæœ‰å·¦å³ï¼ˆleftã€rightï¼‰ä¸¤ä¸ªæŒ‡é’ˆæœ‰æ•ˆï¼ŒæŒ‡å‘åˆ—é¦–
+	rowCount, colCount æœ¬æ¬¡æ ·ä¾‹çŸ©é˜µçš„è§„æ¨¡ï¼ˆè¡Œåˆ—æ•°ï¼‰
+	row[]              è¡Œé¦–ç»“ç‚¹åˆ—è¡¨
+	col[]              åˆ—é¦–ç»“ç‚¹åˆ—è¡¨
 	
-	dlx_pool           ½áµã¶ÔÏó³Ø£¨ÅäºÏdlx_pool_idxÈ¡¶ÔÏó£©
+	dlx_pool           ç»“ç‚¹å¯¹è±¡æ± ï¼ˆé…åˆdlx_pool_idxå–å¯¹è±¡ï¼‰
 */
 class DLX {
-	DLXNode *head;             // ×Ü±íÍ·
-	int rowCount, colCount;    // ±¾´ÎÑùÀı¾ØÕóµÄ¹æÄ££¨ĞĞÁĞÊı£© 
-	DLXNode *row, *col;        // ĞĞÊ×½áµãÁĞ±í / ÁĞÊ×½áµãÁĞ±í
+	DLXNode *head;             // æ€»è¡¨å¤´
+	int rowCount, colCount;    // æœ¬æ¬¡æ ·ä¾‹çŸ©é˜µçš„è§„æ¨¡ï¼ˆè¡Œåˆ—æ•°ï¼‰ 
+	DLXNode *row, *col;        // è¡Œé¦–ç»“ç‚¹åˆ—è¡¨ / åˆ—é¦–ç»“ç‚¹åˆ—è¡¨
 	
-	DLXNode *dlx_pool;         // ½áµã¶ÔÏó³Ø
-	int dlx_pool_idx;          // ½áµã¶ÔÏó³ØÏÂ±ê
+	DLXNode *dlx_pool;         // ç»“ç‚¹å¯¹è±¡æ± 
+	int dlx_pool_idx;          // ç»“ç‚¹å¯¹è±¡æ± ä¸‹æ ‡
 
 	eCoverType eCType;
 	eDanceType eDType;
-	int  *col_coverd;          // ±ê¼ÇµÚiÁĞÊÇ·ñ¸²¸Ç£¬±ÜÃâÖØ¸´¸²¸Ç
-	INT64 *row_code;           // Ã¿ĞĞ²ÉÓÃ¶ş½øÖÆ±ê¼Ç½øĞĞÓÅ»¯
-	int limitColCount;         // ÏŞÖÆÁĞµÄ¸öÊı
-							   // ¼´ Ç° limitColCount ÁĞÂú×ãÃ¿ÁĞ1¸ö"1"£¬¾ÍËãËÑË÷½áÊø
-							   // Ò»°ãÇé¿öÏÂ limitColCount == colCount 
+	int  *col_coverd;          // æ ‡è®°ç¬¬iåˆ—æ˜¯å¦è¦†ç›–ï¼Œé¿å…é‡å¤è¦†ç›–
+	INT64 *row_code;           // æ¯è¡Œé‡‡ç”¨äºŒè¿›åˆ¶æ ‡è®°è¿›è¡Œä¼˜åŒ–
+	int limitColCount;         // é™åˆ¶åˆ—çš„ä¸ªæ•°
+							   // å³ å‰ limitColCount åˆ—æ»¡è¶³æ¯åˆ—1ä¸ª"1"ï¼Œå°±ç®—æœç´¢ç»“æŸ
+							   // ä¸€èˆ¬æƒ…å†µä¸‹ limitColCount == colCount 
 public: 
-	int *result, resultCount;  // ½á¹ûÊı×é
-	int solutionCount;         // ½âÊıÁ¿
+	int *result, resultCount;  // ç»“æœæ•°ç»„
+	int solutionCount;         // è§£æ•°é‡
 	
 private: 
 	DLX() {
@@ -228,7 +250,7 @@ private:
 	void reset_row();
 	DLXNode* get_node();
 	DLXNode* get_min_col();
-	int get_eval();                // ¹À¼Ûº¯Êı
+	int get_eval();                // ä¼°ä»·å‡½æ•°
 
 	void cover(DLXNode *colPtr);
 	void uncover(DLXNode *colPtr);
@@ -252,30 +274,30 @@ public:
 };
 
 void DLX::reset_col() {
-	// [0, colCount)×÷ÎªÁĞÊ×ÔªËØ£¬
-	// µÚcolCount¸öÁĞÊ×ÔªËØµÄµØÖ·×÷Îª×Ü±íÍ·head
+	// [0, colCount)ä½œä¸ºåˆ—é¦–å…ƒç´ ï¼Œ
+	// ç¬¬colCountä¸ªåˆ—é¦–å…ƒç´ çš„åœ°å€ä½œä¸ºæ€»è¡¨å¤´head
 	for(int i = 0; i <= colCount; ++i) {
 		DLXNode *colPtr = &col[i];
 		colPtr->resetCol(i);
-		// ³õÊ¼»¯£¬Ã¿ÁĞÔªËØÎª¿Õ£¬ËùÒÔÁĞÊ×Ö¸ÕëÉÏÏÂÑ­»·Ö¸Ïò×Ô¼º
+		// åˆå§‹åŒ–ï¼Œæ¯åˆ—å…ƒç´ ä¸ºç©ºï¼Œæ‰€ä»¥åˆ—é¦–æŒ‡é’ˆä¸Šä¸‹å¾ªç¯æŒ‡å‘è‡ªå·±
 		colPtr->up = colPtr->down = colPtr;
-		// µÚi¸öÔªËØÖ¸ÏòµÚi-1¸ö£¬µ±i==0£¬ÔòÖ¸ÏòµÚcolCount¸ö£¬¹¹³ÉÑ­»·
+		// ç¬¬iä¸ªå…ƒç´ æŒ‡å‘ç¬¬i-1ä¸ªï¼Œå½“i==0ï¼Œåˆ™æŒ‡å‘ç¬¬colCountä¸ªï¼Œæ„æˆå¾ªç¯
 		colPtr->left = &col[(i+colCount)%(colCount+1)];
-		// µÚi¸öÔªËØÖ¸ÏòµÚi+1¸ö£¬µ±i==colCount£¬ÔòÖ¸ÏòµÚ0¸ö£¬¹¹³ÉÑ­»·
+		// ç¬¬iä¸ªå…ƒç´ æŒ‡å‘ç¬¬i+1ä¸ªï¼Œå½“i==colCountï¼Œåˆ™æŒ‡å‘ç¬¬0ä¸ªï¼Œæ„æˆå¾ªç¯
 		colPtr->right = &col[(i+1)%(colCount+1)];
 		col_coverd[i] = 0;
 	}
-	// È¡µÚcolCount¸öÁĞÊ×ÔªËØµÄµØÖ·×÷Îª×Ü±íÍ·
+	// å–ç¬¬colCountä¸ªåˆ—é¦–å…ƒç´ çš„åœ°å€ä½œä¸ºæ€»è¡¨å¤´
 	head = &col[colCount];
 }
 
 void DLX::reset_row() {
 	for(int i = 0; i < rowCount; ++i) {
-		// ³õÊ¼»¯ĞĞÊ×½áµã
+		// åˆå§‹åŒ–è¡Œé¦–ç»“ç‚¹
 		DLXNode *rowPtr = &row[i];
-		// ³õÊ¼»¯ĞĞ£¬Ã¿ĞĞ¶¼Îª¿Õ£¬ËùÒÔ½áµãµÄ¸÷¸öÖ¸Õë¶¼Ö¸Ïò×Ô¼º
+		// åˆå§‹åŒ–è¡Œï¼Œæ¯è¡Œéƒ½ä¸ºç©ºï¼Œæ‰€ä»¥ç»“ç‚¹çš„å„ä¸ªæŒ‡é’ˆéƒ½æŒ‡å‘è‡ªå·±
 		rowPtr->left = rowPtr->right = rowPtr->up = rowPtr->down = rowPtr;
-		// ¶ÔÓ¦coverÊ±ºòµÄº¯ÊıÈë¿ÚµÄ·Ç¿ÕÅĞ¶Ï
+		// å¯¹åº”coveræ—¶å€™çš„å‡½æ•°å…¥å£çš„éç©ºåˆ¤æ–­
 		rowPtr->setColHead(NULL);
 		rowPtr->setRowIdx(i);
 		row_code[i] = 0;
@@ -305,21 +327,21 @@ DLXNode* DLX::get_min_col() {
 }
 
 /*
-	¹¦ÄÜ£º¹À¼Ûº¯Êı
-	×¢Òâ£º¹À¼ÆÊ£ÓàÁĞ¸²¸ÇÍê»¹ĞèÒªµÄĞĞµÄ¸öÊıµÄ×îĞ¡Öµ <= Êµ¼ÊĞèÒªµÄ×îĞ¡Öµ
+	åŠŸèƒ½ï¼šä¼°ä»·å‡½æ•°
+	æ³¨æ„ï¼šä¼°è®¡å‰©ä½™åˆ—è¦†ç›–å®Œè¿˜éœ€è¦çš„è¡Œçš„ä¸ªæ•°çš„æœ€å°å€¼ <= å®é™…éœ€è¦çš„æœ€å°å€¼
 */
 int DLX::get_eval() {
 	int eval = 0;
 	INT64 row_status = 0;
 	DLXNode *colPtr;
 
-	// Ã¶¾ÙÃ¿Ò»ÁĞ
+	// æšä¸¾æ¯ä¸€åˆ—
 	for(colPtr = head->right; colPtr != head; colPtr = colPtr->right) {
 		int colIdx = colPtr->getColIdx();
 		if(!(row_status & ((INT64)1)<<colIdx)) {
 			row_status |= (((INT64)1)<<colIdx);
 			++eval;
-			// Ã¶¾Ù¸ÃÁĞÉÏµÄÃ´¸öÔªËØ
+			// æšä¸¾è¯¥åˆ—ä¸Šçš„ä¹ˆä¸ªå…ƒç´ 
 			for(DLXNode *nodePtr = colPtr->down; nodePtr != colPtr; nodePtr = nodePtr->down) {
 				row_status |= row_code[nodePtr->getRowIdx()];
 			}
@@ -329,21 +351,21 @@ int DLX::get_eval() {
 }
 
 /*
-	¹¦ÄÜ£º²åÈëÒ»¸ö(rowIdx, colIdx)µÄ½áµã£¨¼´Ô­01¾ØÕóÖĞ(rowIdx, colIdx)Î»ÖÃÎª1µÄ£©
-	×¢Òâ£º°´ÕÕĞĞµİÔö¡¢ÁĞµİÔöµÄË³Ğò½øĞĞ²åÈë
+	åŠŸèƒ½ï¼šæ’å…¥ä¸€ä¸ª(rowIdx, colIdx)çš„ç»“ç‚¹ï¼ˆå³åŸ01çŸ©é˜µä¸­(rowIdx, colIdx)ä½ç½®ä¸º1çš„ï¼‰
+	æ³¨æ„ï¼šæŒ‰ç…§è¡Œé€’å¢ã€åˆ—é€’å¢çš„é¡ºåºè¿›è¡Œæ’å…¥
 */
 void DLX::add(int rowIdx, int colIdx) {
 	DLXNode *nodePtr = get_node();
-	// ½«½áµã²åÈëµ½¶ÔÓ¦ÁĞÎ²
+	// å°†ç»“ç‚¹æ’å…¥åˆ°å¯¹åº”åˆ—å°¾
 	nodePtr->appendToCol(&col[colIdx]);
-	// ½«½áµã²åÈëµ½¶ÔÓ¦ĞĞÎ²
+	// å°†ç»“ç‚¹æ’å…¥åˆ°å¯¹åº”è¡Œå°¾
 	nodePtr->appendToRow(&row[rowIdx]);
 	row_code[rowIdx] |= ((INT64)1<<colIdx);
 }
 
 /*
-	¹¦ÄÜ£ºÊä³öµ±Ç°¾ØÕó
-	µ÷ÊÔÉñÆ÷
+	åŠŸèƒ½ï¼šè¾“å‡ºå½“å‰çŸ©é˜µ
+	è°ƒè¯•ç¥å™¨
 */
 void DLX::output() {
 	for(int i = 0; i < rowCount; i++) {
@@ -357,9 +379,9 @@ void DLX::output() {
 }
 
 /*
-	¹¦ÄÜ£ºÉ¾³ıĞĞ
-		  ¾«È·¸²¸ÇÔÚÉ¾³ıÁĞµÄÊ±ºò£¬ĞèÒª¶ÔĞĞ½øĞĞÉ¾³ı´¦Àí
-		  Ã¶¾ÙÃ¿¸öºÍnodePtrÔÚÍ¬Ò»ĞĞµÄ½áµãp£¬Ö´ĞĞÉ¾³ı²Ù×÷ 
+	åŠŸèƒ½ï¼šåˆ é™¤è¡Œ
+		  ç²¾ç¡®è¦†ç›–åœ¨åˆ é™¤åˆ—çš„æ—¶å€™ï¼Œéœ€è¦å¯¹è¡Œè¿›è¡Œåˆ é™¤å¤„ç†
+		  æšä¸¾æ¯ä¸ªå’ŒnodePtråœ¨åŒä¸€è¡Œçš„ç»“ç‚¹pï¼Œæ‰§è¡Œåˆ é™¤æ“ä½œ 
 */
 void DLX::coverRow(DLXNode* nodePtr) {
 	for(DLXNode *p = nodePtr->right; p != nodePtr; p = p->right) {
@@ -368,8 +390,8 @@ void DLX::coverRow(DLXNode* nodePtr) {
 }
 
 /*
-	¹¦ÄÜ£º»Ö¸´ĞĞ
-		coverRowµÄÄæ²Ù×÷ 
+	åŠŸèƒ½ï¼šæ¢å¤è¡Œ
+		coverRowçš„é€†æ“ä½œ 
 */
 void DLX::uncoverRow(DLXNode* nodePtr) {
 	for(DLXNode *p = nodePtr->left; p != nodePtr; p = p->left) {
@@ -378,18 +400,18 @@ void DLX::uncoverRow(DLXNode* nodePtr) {
 }
 
 /*
-	¹¦ÄÜ£º¸²¸ÇcolPtrÖ¸ÏòµÄÄÇÒ»ÁĞ
-		 ËµÊÇ¸²¸Ç£¬ÆäÊµÊÇÉ¾³ıÄÇÒ»ÁĞ¡£
-		 Èç¹ûÊÇ¾«È·¸²¸Ç£¬ĞèÒªÉ¾³ıÄÇÁĞÉÏËùÓĞ½áµã¶ÔÓ¦µÄĞĞ£¬Ô­ÒòÊÇ£¬cover´ú±íÎÒ»áÑ¡ÔñÕâÁĞ£¬ÕâÁĞÉÏÓĞ1µÄĞĞ±ØĞë¶¼É¾³ı
+	åŠŸèƒ½ï¼šè¦†ç›–colPtræŒ‡å‘çš„é‚£ä¸€åˆ—
+		 è¯´æ˜¯è¦†ç›–ï¼Œå…¶å®æ˜¯åˆ é™¤é‚£ä¸€åˆ—ã€‚
+		 å¦‚æœæ˜¯ç²¾ç¡®è¦†ç›–ï¼Œéœ€è¦åˆ é™¤é‚£åˆ—ä¸Šæ‰€æœ‰ç»“ç‚¹å¯¹åº”çš„è¡Œï¼ŒåŸå› æ˜¯ï¼Œcoverä»£è¡¨æˆ‘ä¼šé€‰æ‹©è¿™åˆ—ï¼Œè¿™åˆ—ä¸Šæœ‰1çš„è¡Œå¿…é¡»éƒ½åˆ é™¤
 */
 void DLX::cover(DLXNode *colPtr) {
 	if(!colPtr) {
 		return;
 	}
 	if(!col_coverd[colPtr->getColIdx()]) {
-		// É¾³ıcolPtrÖ¸ÏòµÄÄÇÒ»ÁĞ
+		// åˆ é™¤colPtræŒ‡å‘çš„é‚£ä¸€åˆ—
 		colPtr->deleteFromCol();
-		// Ã¶¾ÙÃ¿¸öÔÚcolPtr¶ÔÓ¦ÁĞÉÏµÄ½áµãp
+		// æšä¸¾æ¯ä¸ªåœ¨colPtrå¯¹åº”åˆ—ä¸Šçš„ç»“ç‚¹p
 		if (eCType == ECT_EXACT) {
 			for(DLXNode* nodePtr = colPtr->down; nodePtr != colPtr; nodePtr = nodePtr->down) {
 				coverRow(nodePtr);
@@ -400,8 +422,8 @@ void DLX::cover(DLXNode *colPtr) {
 }
 
 /*
-	¹¦ÄÜ£º»Ö¸´colPtrÖ¸ÏòµÄÄÇÒ»ÁĞ
-		 coverµÄÄæ²Ù×÷
+	åŠŸèƒ½ï¼šæ¢å¤colPtræŒ‡å‘çš„é‚£ä¸€åˆ—
+		 coverçš„é€†æ“ä½œ
 */
 void DLX::uncover(DLXNode* colPtr) {
 	if(!colPtr) {
@@ -409,19 +431,19 @@ void DLX::uncover(DLXNode* colPtr) {
 	}
 	--col_coverd[colPtr->getColIdx()];
 	if(!col_coverd[colPtr->getColIdx()]) {
-		// Ã¶¾ÙÃ¿¸öÔÚcolPtr¶ÔÓ¦ÁĞÉÏµÄ½áµãp
+		// æšä¸¾æ¯ä¸ªåœ¨colPtrå¯¹åº”åˆ—ä¸Šçš„ç»“ç‚¹p
 		if (eCType == ECT_EXACT) {
 			for(DLXNode* nodePtr = colPtr->up; nodePtr != colPtr; nodePtr = nodePtr->up) {
 				uncoverRow(nodePtr);
 			}
 		}
-		// »Ö¸´colPtrÖ¸ÏòµÄÄÇÒ»ÁĞ
+		// æ¢å¤colPtræŒ‡å‘çš„é‚£ä¸€åˆ—
 		colPtr->resumeFromCol();
 	}
 }
 
 /*
-	¹¦ÄÜ£ºÓÃÓÚÔ¤ÏÈÑ¡ÔñÄ³ĞĞ 
+	åŠŸèƒ½ï¼šç”¨äºé¢„å…ˆé€‰æ‹©æŸè¡Œ 
 */
 void DLX::preCoverRow(int rowIndex) {
 	DLXNode *rowPtr = &row[rowIndex];
@@ -438,7 +460,7 @@ bool DLX::isEmpty() {
 }
 
 bool DLX::dance(int depth, int maxDepth=INF) {
-	// µ±Ç°¾ØÕóÎª¿Õ£¬ËµÃ÷ÕÒµ½Ò»¸ö¿ÉĞĞ½â£¬Ëã·¨ÖÕÖ¹ 
+	// å½“å‰çŸ©é˜µä¸ºç©ºï¼Œè¯´æ˜æ‰¾åˆ°ä¸€ä¸ªå¯è¡Œè§£ï¼Œç®—æ³•ç»ˆæ­¢ 
 	if(isEmpty()) {
 		resultCount = depth;
 		if(eDType == EDT_GET_ONE_SOLUTION) {
@@ -454,32 +476,32 @@ bool DLX::dance(int depth, int maxDepth=INF) {
 	}
 
 	DLXNode *minPtr = get_min_col();
-	// É¾³ıminPtrÖ¸ÏòµÄÁĞ 
+	// åˆ é™¤minPtræŒ‡å‘çš„åˆ— 
 	cover(minPtr);
-	// minPtrÎª½áµãÊı×îÉÙµÄÁĞ£¬Ã¶¾ÙÕâÁĞÉÏËùÓĞµÄĞĞ
+	// minPträ¸ºç»“ç‚¹æ•°æœ€å°‘çš„åˆ—ï¼Œæšä¸¾è¿™åˆ—ä¸Šæ‰€æœ‰çš„è¡Œ
 	for(DLXNode *p = minPtr->down; p != minPtr; p = p->down) {
-		// Áîr = p->getRowIdx()£¬ĞĞr·ÅÈëµ±Ç°½â 
+		// ä»¤r = p->getRowIdx()ï¼Œè¡Œræ”¾å…¥å½“å‰è§£ 
 		result[depth] = p->getRowIdx();
-		// ĞĞrÉÏµÄ½áµã¶ÔÓ¦µÄÁĞ½øĞĞÉ¾³ı 
+		// è¡Œrä¸Šçš„ç»“ç‚¹å¯¹åº”çš„åˆ—è¿›è¡Œåˆ é™¤ 
 		for(DLXNode *q = p->right; q != p; q = q->right) {
 			cover(q->getColHead());
 		}
-		// ½øÈëËÑË÷Ê÷µÄÏÂÒ»²ã 
+		// è¿›å…¥æœç´¢æ ‘çš„ä¸‹ä¸€å±‚ 
 		if(dance(depth+1, maxDepth)) {
 			return true;
 		}
-		// ĞĞrÉÏµÄ½áµã¶ÔÓ¦µÄÁĞ½øĞĞ»Ö¸´ 
+		// è¡Œrä¸Šçš„ç»“ç‚¹å¯¹åº”çš„åˆ—è¿›è¡Œæ¢å¤ 
 		for(DLXNode *q = p->left; q != p; q = q->left) {
 			uncover(q->getColHead());
 		}
 	}
-	// »Ö¸´minPtrÖ¸ÏòµÄÁĞ
+	// æ¢å¤minPtræŒ‡å‘çš„åˆ—
 	uncover(minPtr); 
 	return false;
 }
 
 class Sudoku {
-	int sdkMatrix[SDK_MAX][SDK_MAX];     //Sudoku¾ØÕó£¬ Êı×Ö·¶Î§Îª[1£¬SDK_MAX], Ã»ÓĞÌîµÄÊı×Ö¼ÇÎª0 
+	int sdkMatrix[SDK_MAX][SDK_MAX];     //SudokuçŸ©é˜µï¼Œ æ•°å­—èŒƒå›´ä¸º[1ï¼ŒSDK_MAX], æ²¡æœ‰å¡«çš„æ•°å­—è®°ä¸º0 
 	int sdkCnt, sdkMax, sdkBlock;        // sdkMax = sdkCnt^2, sdkBlock = sdkMax^2
 
 	struct DLXRow {
@@ -514,8 +536,8 @@ public:
 };
 
 /* 
-	(0, sdkMax-1)-(0, sdkMax-1)   =>     (0, sdkMax-1) µÄÓ³Éä	
-	µÑ¿¨¶û×ø±ê(r, c) µ½ "¹¬" µÄÓ³Éä
+	(0, sdkMax-1)-(0, sdkMax-1)   =>     (0, sdkMax-1) çš„æ˜ å°„	
+	ç¬›å¡å°”åæ ‡(r, c) åˆ° "å®«" çš„æ˜ å°„
 */
 int Sudoku::getRegionIndex(int r, int c) {
 	return (r/sdkCnt)*sdkCnt + c/sdkCnt;
@@ -553,19 +575,19 @@ void Sudoku::createDancingLincks(eDanceType edt) {
 				if(sdkMatrix[i][j] && sdkMatrix[i][j] != k) {
 					continue;
 				}
-				// ¸ñ×ÓÏŞÖÆ£ºÃ¿¸ñÒ»¸öÊı
+				// æ ¼å­é™åˆ¶ï¼šæ¯æ ¼ä¸€ä¸ªæ•°
 				dlx.add(dlxRowCount, i*sdkMax+j);
-				// ĞĞÏŞÖÆ£ºÃ¿ĞĞÖ»ÄÜÒ»¸ök
+				// è¡Œé™åˆ¶ï¼šæ¯è¡Œåªèƒ½ä¸€ä¸ªk
 				dlx.add(dlxRowCount, sdkBlock + i*sdkMax + (k-1));
-				// ÁĞÏŞÖÆ£ºÃ¿ÁĞÖ»ÄÜÒ»¸ök
+				// åˆ—é™åˆ¶ï¼šæ¯åˆ—åªèƒ½ä¸€ä¸ªk
 				dlx.add(dlxRowCount, 2*sdkBlock + j*sdkMax + (k-1));
-				// ¹¬ÏŞÖÆ£ºÃ¿¹¬Ö»ÄÜÒ»¸ök
+				// å®«é™åˆ¶ï¼šæ¯å®«åªèƒ½ä¸€ä¸ªk
 				dlx.add(dlxRowCount, 3*sdkBlock + getRegionIndex(i,j)*sdkMax + (k-1));
 				dlxRow[dlxRowCount++] = DLXRow(i, j, k);
 			}
 		}
 	}
-	// ×Ü¹² dlxRowCount ĞĞ
+	// æ€»å…± dlxRowCount è¡Œ
 }
 
 void Sudoku::startDance() {
@@ -614,11 +636,11 @@ int main() {
 		sdk.startSolveSudoku(n, EDT_JUDGE_MULTIPLE, sdkTemp);
 		DLX &dlx = DLX::Instance();
 		if (dlx.solutionCount == 0) {
-			// Êı¶ÀÎŞ½âµÄÇé¿ö
+			// æ•°ç‹¬æ— è§£çš„æƒ…å†µ
 			printf("No Solution\n");
 			continue;
 		}else if(dlx.solutionCount > 1) {
-			// Êı¶À¶à¸ö½âµÄÇé¿ö
+			// æ•°ç‹¬å¤šä¸ªè§£çš„æƒ…å†µ
 			printf("Multiple Solutions\n");
 			continue;
 		}
@@ -642,7 +664,7 @@ int main() {
 		if(f) {
 			printf("Not Minimal\n");
 		}else {
-			// È¥µôÈÎÒâÒ»¸öÔªËØ£¬¶¼»áµ¼ÖÂ¶à¸ö½âµÄÇé¿ö
+			// å»æ‰ä»»æ„ä¸€ä¸ªå…ƒç´ ï¼Œéƒ½ä¼šå¯¼è‡´å¤šä¸ªè§£çš„æƒ…å†µ
 			sdk.startSolveSudoku(n, EDT_GET_ONE_SOLUTION, sdkTemp);
 			sdk.outputSDKMatrix();
 		}
