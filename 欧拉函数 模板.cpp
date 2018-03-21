@@ -1,3 +1,12 @@
+/*
+æ¬§æ‹‰å‡½æ•°
+    nåˆ†è§£ç´ å› å­è¡¨ç¤ºä¸ºn = p1^e1 * p2^e2 * ... * pk^ek
+    åˆ™nçš„æ¬§æ‹‰å‡½æ•°ä¸º f(n) = (p1-1)p1^(e1-1) * (p2-1)p2^(e2-1) * ... * (pk-1)pk^(ek-1)
+Author: WhereIsHeroFrom
+Update Time: 2018-3-21
+Algorithm Complexity: O(sqrt(n))
+*/
+
 #include <iostream>
 #include <cstring>
 #include <vector>
@@ -9,7 +18,7 @@ using namespace std;
 int primes[MAXP];
 bool notprime[MAXP];
 
-// ¶ò¶û¶àÈûËØÊıÉ¸Ñ¡·¨ 
+// å„å°”å¤šå¡ç´ æ•°ç­›é€‰æ³• 
 void Eratosthenes() {
 	memset(notprime, false, sizeof(notprime));
 	notprime[1] = true;
@@ -17,7 +26,7 @@ void Eratosthenes() {
 	for(int i = 2; i < MAXP; i++) {
 		if( !notprime[i] ) {
 			primes[ ++primes[0] ] = i;
-		    //ĞèÒª×¢Òâi*i³¬³öÕûĞÍºó±ä³É¸ºÊıµÄÎÊÌâ£¬ËùÒÔ×ª»¯³É __int64 
+		    //éœ€è¦æ³¨æ„i*iè¶…å‡ºæ•´å‹åå˜æˆè´Ÿæ•°çš„é—®é¢˜ï¼Œæ‰€ä»¥è½¬åŒ–æˆ __int64 
 			for(LL j = (LL)i*i; j < MAXP; j += i) {
 				notprime[j] = true;
 			}
@@ -25,16 +34,16 @@ void Eratosthenes() {
 	}
 }
 
-// Å·À­º¯Êı - »ñÈ¡Ğ¡ÓÚnµÄÊıÖĞÓën»¥ËØµÄÊıµÄ¸öÊı 
-// ¾ÙÀı£º
+// æ¬§æ‹‰å‡½æ•° - è·å–å°äºnçš„æ•°ä¸­ä¸näº’ç´ çš„æ•°çš„ä¸ªæ•° 
+// ä¸¾ä¾‹ï¼š
 // Phi(10) = 4
-// ¼´ 1¡¢3¡¢7¡¢9  ×Ü¹²4¸ö 
+// å³ 1ã€3ã€7ã€9  æ€»å…±4ä¸ª 
 int Phi(int n) {
 	if(n == 1) {
 		return 1;
 	}
 	int ans = 1; 
-	// ËØÊıÊÔ³ı 
+	// ç´ æ•°è¯•é™¤ 
 	for(int i = 1; i <= primes[0]; i++) {
 		int p = primes[i];
 		if(n % p == 0) {
