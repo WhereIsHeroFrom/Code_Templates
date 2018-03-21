@@ -1,3 +1,21 @@
+/*
+Lucaså®šç†
+
+ç»„åˆæ•°c(n,m) mod p   
+Lucas(n, m, p) = Lucas(n/p, m/p, p) * C(n%p, m%p, p) % p
+
+n<p, m<p mod p
+Comb(n,m,p) = n!/(m!(n-m)!) % p
+ä»¤x = m!(n-m)!ï¼Œx'ä¸ºxå¯¹pçš„é€†å…ƒï¼Œå³x*x'%p=1ï¼Œåˆ™Comb(n,m,p) = n!*x'%p
+æ ¹æ®è´¹é©¬å°å®šç†a^(p-1)%p=1ï¼Œåˆ™açš„é€†å…ƒä¸ºa^(p-2)%pï¼Œå³x' = x^(p-2)%pï¼Œ
+Comb(n,m,p) = n! * (m!(n-m)!)^(p-2) % p
+é—®é¢˜è½¬åŒ–æˆæ±‚ n! % pã€‚
+
+Author: WhereIsHeroFrom
+Update Time: 2018-3-21
+Algorithm Complexity: O(log(n))
+*/
+
 #include <iostream>
 #include <map>
 #include <vector>
@@ -11,7 +29,7 @@ using namespace std;
 
 #define LL __int64
 
-// ĞèÒª´æ´¢ n! mod p 
+// éœ€è¦å­˜å‚¨ n! mod p 
 LL factorialMod[MAXC][MAXX];
 
 
@@ -39,7 +57,7 @@ public:
 	}
 };
 
-// ³õÊ¼»¯ n! mod p 
+// åˆå§‹åŒ– n! mod p 
 void initFactorialMod(int n, int p) {
 	int i;
 	PrimeIndex &PI = PrimeIndex::Instance();
@@ -52,7 +70,7 @@ void initFactorialMod(int n, int p) {
 	}
 }
 
-// ¶ş·Ö¿ìËÙÃİ 
+// äºŒåˆ†å¿«é€Ÿå¹‚ 
 LL mod(LL a, LL b, LL p) {
 	if(!b) {
 		return 1;
@@ -64,17 +82,17 @@ LL mod(LL a, LL b, LL p) {
 	return x;
 }
 
-// ¼ÆËã×éºÏÊın<p, m<p mod ËØÊı
+// è®¡ç®—ç»„åˆæ•°n<p, m<p mod ç´ æ•°
 LL Comb(int n, int m, int p) {
-	// n¸öÊıÀïÃæÈ¡m¸ö£¬Èç¹ûm>n£¬·½°¸Êı²»´æÔÚ£¬·µ»Ø0 
+	// nä¸ªæ•°é‡Œé¢å–mä¸ªï¼Œå¦‚æœm>nï¼Œæ–¹æ¡ˆæ•°ä¸å­˜åœ¨ï¼Œè¿”å›0 
 	if(m > n) {
 		return 0;
 	}
 	// Comb(n,m,p) = n!/(m!(n-m)!) % p
-	// Áîx = m!(n-m)!£¬x'Îªx¶ÔpµÄÄæÔª£¬¼´x*x'%p=1£¬ÔòComb(n,m,p) = n!*x'%p
-	// ¸ù¾İ·ÑÂíĞ¡¶¨Àía^(p-1)%p=1£¬ÔòaµÄÄæÔªÎªa^(p-2)%p£¬¼´x' = x^(p-2)%p£¬
+	// ä»¤x = m!(n-m)!ï¼Œx'ä¸ºxå¯¹pçš„é€†å…ƒï¼Œå³x*x'%p=1ï¼Œåˆ™Comb(n,m,p) = n!*x'%p
+	// æ ¹æ®è´¹é©¬å°å®šç†a^(p-1)%p=1ï¼Œåˆ™açš„é€†å…ƒä¸ºa^(p-2)%pï¼Œå³x' = x^(p-2)%pï¼Œ
 	//  Comb(n,m,p) = n! * (m!(n-m)!)^(p-2) % p
-	// ÎÊÌâ×ª»¯³ÉÇó n! % p¡£
+	// é—®é¢˜è½¬åŒ–æˆæ±‚ n! % pã€‚
 	int pIdx = PrimeIndex::Instance().getIndex(p);
 	LL ans = 1;
 	ans = ans * factorialMod[n][pIdx] % p;
@@ -83,7 +101,7 @@ LL Comb(int n, int m, int p) {
 	return ans;
 }
 
-// ¼ÆËã×éºÏÊı mod ËØÊı 
+// è®¡ç®—ç»„åˆæ•° mod ç´ æ•° 
 // C(n,m) % p
 LL Lucas(int n, int m, int p) {
 	if(m == 0) {
