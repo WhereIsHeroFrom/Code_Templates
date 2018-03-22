@@ -1,3 +1,12 @@
+/*
+矩阵二分快速幂
+    递推公式的神级加速，转换成矩阵幂求解；
+    矩阵相乘的最内层循环加和如果不溢出，则憋着不取模；
+Author: WhereIsHeroFrom
+Update Time: 2018-3-22
+Algorithm Complexity: O(m^3log(n))
+*/
+
 #define MAXN 70
 #define MOD 1234567891
 #define LL __int64
