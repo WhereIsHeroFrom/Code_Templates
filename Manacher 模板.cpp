@@ -1,11 +1,11 @@
 /*
-ManacherËã·¨£¨Çó½â×Ö·û´®×î³¤»ØÎÄ£© 
-   1.½«×Ö·û´®¼ä¸ô²åÈëÒ»¸öÈ«ÐÂ×Ö·û£¬½«×Ö·û´®×ª»»³ÉÆæÊý³¤¶È£» 
-   2.ÏßÐÔÃ¶¾ÙÃ¿¸ö×Ö·ûÎªÖÐÐÄÖá£¬¼ÆËãµÚi¸ö×Ö·ûµÄ×î³¤»ØÎÄ°ë¾¶p[i];
-      a.ÀûÓÃÖ®Ç°µÄ¼ÆËã½á¹û»ñµÃp[i]³õÊ¼Öµ£»
-	  b.Á½±ßÀ©Õ¹£¬¸üÐÂp[i]Öµ£»
-	  c.ÀûÓÃi+p[i]¸üÐÂºËÐÄÖÐÐÄÖá£»
-	  d.ÀûÓÃ2*p[i]-1¸üÐÂ×î³¤»ØÎÄ³¤¶È 
+Manacherç®—æ³•ï¼ˆæ±‚è§£å­—ç¬¦ä¸²æœ€é•¿å›žæ–‡ï¼‰ 
+   1.å°†å­—ç¬¦ä¸²é—´éš”æ’å…¥ä¸€ä¸ªå…¨æ–°å­—ç¬¦ï¼Œå°†å­—ç¬¦ä¸²è½¬æ¢æˆå¥‡æ•°é•¿åº¦ï¼› 
+   2.çº¿æ€§æžšä¸¾æ¯ä¸ªå­—ç¬¦ä¸ºä¸­å¿ƒè½´ï¼Œè®¡ç®—ç¬¬iä¸ªå­—ç¬¦çš„æœ€é•¿å›žæ–‡åŠå¾„p[i];
+      a.åˆ©ç”¨ä¹‹å‰çš„è®¡ç®—ç»“æžœèŽ·å¾—p[i]åˆå§‹å€¼ï¼›
+      b.ä¸¤è¾¹æ‰©å±•ï¼Œæ›´æ–°p[i]å€¼ï¼›
+      c.åˆ©ç”¨i+p[i]æ›´æ–°æ ¸å¿ƒä¸­å¿ƒè½´ï¼›
+      d.åˆ©ç”¨2*p[i]-1æ›´æ–°æœ€é•¿å›žæ–‡é•¿åº¦ 
 Author: WhereIsHeroFrom
 Update Time: 2018-3-24
 Algorithm Complexity: O(n)
@@ -39,22 +39,22 @@ int Manacher(char *str) {
 	int ct = 0, r = 0, maxLen = 1;
 	p[0] = 1;
 	for(int i = 1; str[i]; ++i) {
-		// 1.¼ÆËãp[i]³õÊ¼Öµ 
+		// 1.è®¡ç®—p[i]åˆå§‹å€¼ 
 		if(i < r) {
 			p[i] = Min(p[2*ct-i], r-i);
 		}else {
 			p[i] = 1;
 		}
-		// 2.À©ÕÅp[i]£¬ÒÔÊÊÓ¦´ïµ½p[i]×î´óÖµ 
+		// 2.æ‰©å¼ p[i]ï¼Œä»¥é€‚åº”è¾¾åˆ°p[i]æœ€å¤§å€¼ 
 		while(i-p[i]>=0 && str[i-p[i]] == str[i+p[i]])
 			++p[i];
 		
-		// 3.¸üÐÂct
+		// 3.æ›´æ–°ct
 		if(p[i] + i > r) {
 			ct = i;
 			r = p[i] + i;
 		}
-		// 4.¸üÐÂ×î³¤»ØÎÄ 
+		// 4.æ›´æ–°æœ€é•¿å›žæ–‡ 
 		if(2*p[i]-1 > maxLen) {
 			maxLen = 2*p[i] - 1;
 		}
