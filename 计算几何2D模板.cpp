@@ -5,7 +5,7 @@
 using namespace std;
 
 const int MAXP = 1100;
-#define eps 1e-15
+#define eps 1e-6
 #define LL __int64
 typedef double Type;
 
