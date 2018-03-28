@@ -12,18 +12,18 @@ typedef double Type;
 class HalfPlane;
 class Polygon;
 
-// ÈıÖµº¯Êı
+// ä¸‰å€¼å‡½æ•°
 int threeValue(Type d) {
     if(fabs(d) < 1e-6)
 		return 0;
 	return d > 0 ? 1 : -1;
 }
 
-// Á½Ïß¶Î½»µãÀàĞÍ
+// ä¸¤çº¿æ®µäº¤ç‚¹ç±»å‹
 enum SegCrossType {
 	SCT_NONE = 0,
-	SCT_CROSS = 1,         // Õı³£Ïà½»
-	SCT_ENDPOINT_ON = 2,   // ÆäÖĞÒ»ÌõÏß¶ÎµÄ¶ËµãÔÚÁíÒ»ÌõÉÏ
+	SCT_CROSS = 1,         // æ­£å¸¸ç›¸äº¤
+	SCT_ENDPOINT_ON = 2,   // å…¶ä¸­ä¸€æ¡çº¿æ®µçš„ç«¯ç‚¹åœ¨å¦ä¸€æ¡ä¸Š
 };
 
 class Point2D {
@@ -97,13 +97,13 @@ bool Point2D::operator <(const Point2D &p) const {
     return y + eps < p.y || ( y < p.y + eps && x + eps < p.x );
 }
 
-// !!!!×¢Òâ!!!!
-// Èç¹ûTypeÎªint£¬Ôò³Ë·¨¿ÉÄÜµ¼ÖÂint32Òç³ö£¬Ğ¡ĞÄ½÷É÷
-// µã³Ë
+// !!!!æ³¨æ„!!!!
+// å¦‚æœTypeä¸ºintï¼Œåˆ™ä¹˜æ³•å¯èƒ½å¯¼è‡´int32æº¢å‡ºï¼Œå°å¿ƒè°¨æ…
+// ç‚¹ä¹˜
 Type Point2D::operator*(const Point2D& other) const {
 	return x*other.x + y*other.y;
 }
-// ²æ³Ë
+// å‰ä¹˜
 Type Point2D::X(const Point2D& other) {
 	return x*other.y - y*other.x;
 }
@@ -116,22 +116,22 @@ public:
 		t.read();
 	}
 
-	// ¶¨µã²æ³Ë
-	// Íâ²¿ÕÒÒ»µãp£¬È»ºó¼ÆËã (p-s)¡Á(t-s)
+	// å®šç‚¹å‰ä¹˜
+	// å¤–éƒ¨æ‰¾ä¸€ç‚¹pï¼Œç„¶åè®¡ç®— (p-s)Ã—(t-s)
 	Type cross(const Point2D& p) const {
 		return (p - s).X(t - s);
 	}
 
-	// ¿çÁ¢²âÑé
-	// ½«µ±Ç°Ïß¶Î×÷ÎªÒ»ÌõºÜ³¤µÄÖ±Ïß£¬¼ì²âÏß¶ÎotherÊÇ·ñ¿çÁ¢ÔÚÕâÌõÖ±ÏßµÄÁ½±ß
+	// è·¨ç«‹æµ‹éªŒ
+	// å°†å½“å‰çº¿æ®µä½œä¸ºä¸€æ¡å¾ˆé•¿çš„ç›´çº¿ï¼Œæ£€æµ‹çº¿æ®µotheræ˜¯å¦è·¨ç«‹åœ¨è¿™æ¡ç›´çº¿çš„ä¸¤è¾¹
 	bool lineCross(const Segment2D& other) const;
 	
-	// µãÊÇ·ñÔÚÏß¶ÎÉÏ
+	// ç‚¹æ˜¯å¦åœ¨çº¿æ®µä¸Š
 	bool pointOn(const Point2D& p) const;
 
-	// Ïß¶ÎÅĞ½»
-	// 1.Í¨¹ı¿çÁ¢²âÑé
-	// 2.µãÊÇ·ñÔÚÏß¶ÎÉÏ
+	// çº¿æ®µåˆ¤äº¤
+	// 1.é€šè¿‡è·¨ç«‹æµ‹éªŒ
+	// 2.ç‚¹æ˜¯å¦åœ¨çº¿æ®µä¸Š
 	SegCrossType segCross(const Segment2D& other);
 };
 
@@ -140,18 +140,18 @@ bool Segment2D::lineCross(const Segment2D& other) const {
 }
 
 bool Segment2D::pointOn(const Point2D& p) const {
-	// Âú×ãÁ½¸öÌõ¼ş£º
-	//  1.²æ³ËÎª0£¬    (p-s)¡Á(t-s) == 0
-	//  2.µã³ËÎª-1»ò0£¬(p-s)*(p-t) <= 0
+	// æ»¡è¶³ä¸¤ä¸ªæ¡ä»¶ï¼š
+	//  1.å‰ä¹˜ä¸º0ï¼Œ    (p-s)Ã—(t-s) == 0
+	//  2.ç‚¹ä¹˜ä¸º-1æˆ–0ï¼Œ(p-s)*(p-t) <= 0
 	return cross(p) == 0 && (p-s)*(p-t) <= 0;
 }
 
 SegCrossType Segment2D::segCross(const Segment2D& other) {
 	if(this->lineCross(other) && other.lineCross(*this)) {
-		// Á½´Î¿çÁ¢¶¼³ÉÁ¢£¬Ôò±ØÈ»Ïà½»ÓëÒ»µã
+		// ä¸¤æ¬¡è·¨ç«‹éƒ½æˆç«‹ï¼Œåˆ™å¿…ç„¶ç›¸äº¤ä¸ä¸€ç‚¹
 		return SCT_CROSS;
 	}
-	// ÈÎÒâÒ»ÌõÏß¶ÎµÄÄ³¸ö¶ËµãÊÇ·ñÔÚÆäÖĞÒ»ÌõÏß¶ÎÉÏ£¬ËÄÖÖÇé¿ö
+	// ä»»æ„ä¸€æ¡çº¿æ®µçš„æŸä¸ªç«¯ç‚¹æ˜¯å¦åœ¨å…¶ä¸­ä¸€æ¡çº¿æ®µä¸Šï¼Œå››ç§æƒ…å†µ
 	if(pointOn(other.s) || pointOn(other.t) ||
 		other.pointOn(s) || other.pointOn(t) ) {
 			return SCT_ENDPOINT_ON;
@@ -168,8 +168,8 @@ public:
 	bool isParallelTo(const Line2D& );
 };
 
-// Á½Ìõ²»Æ½ĞĞµÄÖ±Ïß±ØÓĞ½»µã
-// ÀûÓÃ²æ³ËÇóÃæ»ı·¨µÄÏàËÆÈı½ÇĞÎ±ÈÖµµÃ³ö½»µã
+// ä¸¤æ¡ä¸å¹³è¡Œçš„ç›´çº¿å¿…æœ‰äº¤ç‚¹
+// åˆ©ç”¨å‰ä¹˜æ±‚é¢ç§¯æ³•çš„ç›¸ä¼¼ä¸‰è§’å½¢æ¯”å€¼å¾—å‡ºäº¤ç‚¹
 Point2D Line2D::getCrossPoint(const Line2D& other) {
 	double SA = (other.a - a).X(b - a);
 	double SB = (b - a).X(other.b - a);
@@ -180,10 +180,10 @@ bool Line2D::isParallelTo(const Line2D& other) {
 	return !threeValue( (b-a).X(other.b - other.a) );
 }
 
-/* °ëÆ½Ãæ¶¨Òå£º
-   ÑØ×ÅÉäÏß(a->b)·½ÏòµÄ×óÊÖÃæ¶¨ÒåÎª°ëÆ½Ãæ
-   ËùÓĞµÄ¶à±ßĞÎ½¨Á¢µÄÊ±ºò£¬ĞèÒª×¢Òâ£¬±£Ö¤µã°´ÕÕÄæÊ±ÕëÅÅÁĞ
-   ÅĞ¶ÏÊÇ·ñÄæÊ±ÕëÅÅÁĞ¿ÉÒÔÓÃÃæ»ı >0 ÅĞ¶¨
+/* åŠå¹³é¢å®šä¹‰ï¼š
+   æ²¿ç€å°„çº¿(a->b)æ–¹å‘çš„å·¦æ‰‹é¢å®šä¹‰ä¸ºåŠå¹³é¢
+   æ‰€æœ‰çš„å¤šè¾¹å½¢å»ºç«‹çš„æ—¶å€™ï¼Œéœ€è¦æ³¨æ„ï¼Œä¿è¯ç‚¹æŒ‰ç…§é€†æ—¶é’ˆæ’åˆ—
+   åˆ¤æ–­æ˜¯å¦é€†æ—¶é’ˆæ’åˆ—å¯ä»¥ç”¨é¢ç§¯ >0 åˆ¤å®š
 */
 class HalfPlane : public Line2D {
 	double angle;
@@ -259,14 +259,14 @@ double Polygon::area() {
     return sum / 2;
 }
 
-// ÇóÍ¹°ü
+// æ±‚å‡¸åŒ…
 void Polygon::getConvex(Polygon &c) {
     sort(p, p + n);
-    c.n = n;
+    c.n = n;		
+	for(int i = 0; i < n; ++i) {	
+		c.p[i] = p[i];
+	}
 	if(n <= 2) {
-		for(int i = 0; i < n; ++i) {
-			c.p[i] = p[i];
-		}
 		return ;
 	}
         
@@ -286,19 +286,19 @@ void Polygon::getConvex(Polygon &c) {
     }
 }
 
-// ÊÇ·ñÍ¹¶à±ßĞÎ
+// æ˜¯å¦å‡¸å¤šè¾¹å½¢
 bool Polygon::isConvex() {
     bool s[3] = { false , false , false };
     p[n] = p[0], p[n + 1] = p[1];
     for ( int i = 0 ; i < n ; i ++ ) {
         s[threeValue(( p[i + 1] - p[i] ) * ( p[i + 2] - p[i] )) + 1] = true;
-		// ²æ³ËÓĞ×óÓĞÓÒ£¬¿Ï¶¨ÊÇ°¼µÄ
+		// å‰ä¹˜æœ‰å·¦æœ‰å³ï¼Œè‚¯å®šæ˜¯å‡¹çš„
         if ( s[0] && s[2] ) return false;
     }
     return true;
 }
 
-// µãÊÇ·ñÔÚÍ¹¶à±ßĞÎÄÚ
+// ç‚¹æ˜¯å¦åœ¨å‡¸å¤šè¾¹å½¢å†…
 bool Polygon::isPointInConvex(const Point2D &P) {
     bool s[3] = { false , false , false };
     p[n] = p[0];
@@ -310,7 +310,7 @@ bool Polygon::isPointInConvex(const Point2D &P) {
     return true;
 }
 
-// ×ª³ÉÄæÊ±ÕëË³Ğò
+// è½¬æˆé€†æ—¶é’ˆé¡ºåº
 void Polygon::convertToCounterClockwise() {
 	if(area() >= 0) {
 		return ;
@@ -322,8 +322,8 @@ void Polygon::convertToCounterClockwise() {
 	}
 }
 
-// ÇóÁ½ÈÎÒâ¶à±ßĞÎµÄ½»
-// ÒªÇóÁ½¸ö¶à±ßĞÎÄæÊ±ÕëÅÅÁĞ
+// æ±‚ä¸¤ä»»æ„å¤šè¾¹å½¢çš„äº¤
+// è¦æ±‚ä¸¤ä¸ªå¤šè¾¹å½¢é€†æ—¶é’ˆæ’åˆ—
 double Polygon::getPolygonIntersect(Polygon& other) {
 	int i, j;
 	HalfPlane hp[2][3];
@@ -333,10 +333,10 @@ double Polygon::getPolygonIntersect(Polygon& other) {
 	other.convertToCounterClockwise();
 
 	double area = 0;
-	// Ã¶¾ÙÃ¿¸öÈı½ÇĞÎ£¬¼ÇµÃÕı¸º
+	// æšä¸¾æ¯ä¸ªä¸‰è§’å½¢ï¼Œè®°å¾—æ­£è´Ÿ
 	for(i = 0; i < n; ++i) {
 		Point2D O(0, 0);
-		// Á½¸ö¶à±ßĞÎ·Ö±ğ²ğ³ÉÁ½¸öÓĞÏòÈı½ÇĞÎ£¬Çó°ëÆ½Ãæ½»£¬ÔÙÀÛ¼Ó
+		// ä¸¤ä¸ªå¤šè¾¹å½¢åˆ†åˆ«æ‹†æˆä¸¤ä¸ªæœ‰å‘ä¸‰è§’å½¢ï¼Œæ±‚åŠå¹³é¢äº¤ï¼Œå†ç´¯åŠ 
 		int td = constructTriangleHalfPlane(O, p[i], p[i+1], hp[0]);
 		if(td == 0)
 			continue;
@@ -358,7 +358,7 @@ double Polygon::getPolygonIntersect(Polygon& other) {
 			}
 		}
 	}
-	// ×¢Òâ£¡£¡£¡£¡ÕâÀïÇó³öÀ´µÄÏà½» Ãæ»ıÔÊĞíÎª¸ºÊı
+	// æ³¨æ„ï¼ï¼ï¼ï¼è¿™é‡Œæ±‚å‡ºæ¥çš„ç›¸äº¤ é¢ç§¯å…è®¸ä¸ºè´Ÿæ•°
 	return area;
 }
 
@@ -397,10 +397,10 @@ bool HalfPlane::equalAngle(const HalfPlane &other) const {
 	return !threeValue(angle - other.angle);
 }
 
-// ¼«½Ç²»Í¬Ôò°´ÕÕ¼«½Ç´ÓĞ¡µ½´óÅÅĞò
-// Èç¹û¼«½ÇÏàÍ¬£¬Ôò½øĞĞÈçÏÂ²Ù×÷£º
-// ÏòÁ¿A = (b - a) ²æ³Ë ÏòÁ¿ B = (other.a - a)
-// Èç¹û´óÓÚ0£¬ËµÃ÷ÏòÁ¿AÔÚÏòÁ¿BµÄÓÒ²à£¬±£ÁôA£¬ÌŞ³ıB£»
+// æè§’ä¸åŒåˆ™æŒ‰ç…§æè§’ä»å°åˆ°å¤§æ’åº
+// å¦‚æœæè§’ç›¸åŒï¼Œåˆ™è¿›è¡Œå¦‚ä¸‹æ“ä½œï¼š
+// å‘é‡A = (b - a) å‰ä¹˜ å‘é‡ B = (other.a - a)
+// å¦‚æœå¤§äº0ï¼Œè¯´æ˜å‘é‡Aåœ¨å‘é‡Bçš„å³ä¾§ï¼Œä¿ç•™Aï¼Œå‰”é™¤Bï¼›
 bool HalfPlane::operator < (const HalfPlane &other) const {
 	if( threeValue(angle - other.angle) ) {
 		return angle < other.angle;
@@ -408,8 +408,8 @@ bool HalfPlane::operator < (const HalfPlane &other) const {
 	return !isPointIn(other.a);
 }
 
-// Õâ¸öº¯Êı·Ç³£ÓĞÓÃ ÓÃÓÚisPointInµÄÅĞ¶Ï
-// ²æ³Ë½á¹û <= 0£¬ÔòËµÃ÷pµãÔÚ°ëÆ½ÃæÇøÓòÄÚ
+// è¿™ä¸ªå‡½æ•°éå¸¸æœ‰ç”¨ ç”¨äºisPointInçš„åˆ¤æ–­
+// å‰ä¹˜ç»“æœ <= 0ï¼Œåˆ™è¯´æ˜pç‚¹åœ¨åŠå¹³é¢åŒºåŸŸå†…
 Type HalfPlane::X(const Point2D &p) const {
     return ( b - a ).X( p - a );
 }
@@ -418,7 +418,7 @@ bool HalfPlane::isPointIn(const Point2D &p) const {
 	return threeValue( X(p) ) >= 0;
 }
 
-// °ëÆ½Ãæ¿¿×Å×ó·½½øĞĞËõ½ø£¬Ëõ½ø¾àÀëÎªdist
+// åŠå¹³é¢é ç€å·¦æ–¹è¿›è¡Œç¼©è¿›ï¼Œç¼©è¿›è·ç¦»ä¸ºdist
 void HalfPlane::move(double dist) {
 	Point2D t = (b-a).turnLeft();
 	t.normalize();
@@ -457,7 +457,7 @@ void HalfPlanes::getHalfPlane(HalfPlanes& H) {
 void HalfPlanes::unique() {
 	int m = 1;
 	for(int i = 1; i < n; ++i) {
-		// ¼«½ÇÏàÍ¬È¡ÆäÇ°
+		// æè§’ç›¸åŒå–å…¶å‰
 		if( !hp[i].equalAngle(hp[i-1]) ) {
 			hp[m++] = hp[i];
 		}
@@ -466,35 +466,35 @@ void HalfPlanes::unique() {
 }
 
 bool HalfPlanes::doIntersection() {
-	// 1.°´ÕÕ¼«½ÇÅÅĞò£¬ÌŞ³ı¼«½ÇÏàÍ¬µÄ°ëÆ½Ãæ
+	// 1.æŒ‰ç…§æè§’æ’åºï¼Œå‰”é™¤æè§’ç›¸åŒçš„åŠå¹³é¢
 	sort(hp, hp + n);
 	unique();
 	//print();
-	// 2.½«Ç°Á½¸ö°ëÆ½Ãæ·ÅÈëµ¥µ÷¶ÓÁĞ£¬²¢ÇÒ¼ÆËã³ö½»µã
+	// 2.å°†å‰ä¸¤ä¸ªåŠå¹³é¢æ”¾å…¥å•è°ƒé˜Ÿåˆ—ï¼Œå¹¶ä¸”è®¡ç®—å‡ºäº¤ç‚¹
 	que[ head=0 ] = 0, que[ tail=1 ] = 1;
 	p[1] = hp[0].getCrossPoint(hp[1]);
-	// 3.°´ÕÕ¼«½ÇË³ĞòÏßĞÔÃ¶¾ÙËùÓĞÆ½Ãæ£¬ºÍ¶ÓÁĞÖĞµÄ°ëÆ½Ãæ½øĞĞÇó½»ÔËËã
+	// 3.æŒ‰ç…§æè§’é¡ºåºçº¿æ€§æšä¸¾æ‰€æœ‰å¹³é¢ï¼Œå’Œé˜Ÿåˆ—ä¸­çš„åŠå¹³é¢è¿›è¡Œæ±‚äº¤è¿ç®—
 	for(int i = 2; i < n; ++i) {
-		// Ç°Á½¸ö°ëÆ½Ãæ½»µãp[tail]£¬²»ÔÚµ±Ç°°ëÆ½ÃæÄÚ£¬ÔòÉ¾³ıÇ°Ò»¸ö°ëÆ½Ãæ
+		// å‰ä¸¤ä¸ªåŠå¹³é¢äº¤ç‚¹p[tail]ï¼Œä¸åœ¨å½“å‰åŠå¹³é¢å†…ï¼Œåˆ™åˆ é™¤å‰ä¸€ä¸ªåŠå¹³é¢
 		while(head < tail && !hp[i].isPointIn(p[tail]) )
 			--tail;
-		// ÅĞ¶ÏÁíÒ»²àµÄ°ëÆ½Ãæ½»µãp[head+1]£¬²»ÔÚµ±Ç°°ëÆ½ÃæÄÚ£¬Ôò½øĞĞÆ½ÃæÌŞ³ı
+		// åˆ¤æ–­å¦ä¸€ä¾§çš„åŠå¹³é¢äº¤ç‚¹p[head+1]ï¼Œä¸åœ¨å½“å‰åŠå¹³é¢å†…ï¼Œåˆ™è¿›è¡Œå¹³é¢å‰”é™¤
 		while(head < tail && !hp[i].isPointIn(p[head+1]) )
 			++head;
-		// Èç¹ûÄ³¸öÊ±¿Ì Á½¸ö·´Ïò°ëÆ½ÃæÆ½ĞĞÁË£¬±ØÈ»ÎŞ½â
+		// å¦‚æœæŸä¸ªæ—¶åˆ» ä¸¤ä¸ªåå‘åŠå¹³é¢å¹³è¡Œäº†ï¼Œå¿…ç„¶æ— è§£
 		if(hp[i].isParallelTo(hp[que[tail]])) {
 			return false;
 		}
-		// ½«µ±Ç°°ëÆ½ÃæÑ¹Èë¶ÓÁĞ
+		// å°†å½“å‰åŠå¹³é¢å‹å…¥é˜Ÿåˆ—
 		que[ ++tail ] = i;
 		p[tail] = hp[i].getCrossPoint(hp[que[tail-1]]);
 	}
-	// 4.¶ÓÁĞÊ×µÄÄÇ¸ö°ëÆ½Ãæ£¬ĞèÒªÂú×ãËùÓĞµã¶¼ÔÚËüµÄ×ó±ß
+	// 4.é˜Ÿåˆ—é¦–çš„é‚£ä¸ªåŠå¹³é¢ï¼Œéœ€è¦æ»¡è¶³æ‰€æœ‰ç‚¹éƒ½åœ¨å®ƒçš„å·¦è¾¹
 	while(head < tail && !hp[que[head]].isPointIn(p[tail]))
 		--tail;
 	while(head < tail && !hp[que[tail]].isPointIn(p[head+1]))
 		++head;
-	// ÖÁÉÙÈı¸ö°ëÆ½Ãæ²ÅÄÜ¹¹³ÉÒ»¸ö·â±ÕÇøÓò
+	// è‡³å°‘ä¸‰ä¸ªåŠå¹³é¢æ‰èƒ½æ„æˆä¸€ä¸ªå°é—­åŒºåŸŸ
 	return head + 1 < tail;
 }
 
@@ -507,14 +507,14 @@ void HalfPlanes::getConvex(Polygon &convex) {
 	convex.p[ convex.n ] = convex.p[0];
 }
 
-// »ñÈ¡¶à±ßĞÎµÄºË
+// è·å–å¤šè¾¹å½¢çš„æ ¸
 // 
 bool getPolygonKernel(Polygon &poly, Polygon& ansPoly, double movedist,  double& area) {
 	int i;
 	HalfPlanes &h = HalfPlanes::Instance();
 	h.init();
 
-	// Ãæ»ı´óÓÚ0£¬ÄæÊ±Õë
+	// é¢ç§¯å¤§äº0ï¼Œé€†æ—¶é’ˆ
 	if(poly.area() > 0) {
 		for(i = 0; i < poly.n; ++i) {
 			HalfPlane hp(poly.p[i], poly.p[i+1]);
@@ -539,7 +539,7 @@ bool getPolygonKernel(Polygon &poly, Polygon& ansPoly, double movedist,  double&
 }
 
 
-// »ñÈ¡¶à±ßĞÎµÄºË
+// è·å–å¤šè¾¹å½¢çš„æ ¸
 bool getPolygonKernel(double lx, double ly, double rx, double ry, Polygon &poly, HalfPlanes& planes, double& area) {
 	int i;
 	HalfPlanes &h = HalfPlanes::Instance();
