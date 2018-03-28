@@ -143,7 +143,7 @@ bool Segment2D::pointOn(const Point2D& p) const {
 	// 满足两个条件：
 	//  1.叉乘为0，    (p-s)×(t-s) == 0
 	//  2.点乘为-1或0，(p-s)*(p-t) <= 0
-	return cross(p) == 0 && (p-s)*(p-t) <= 0;
+	return threeValue(cross(p)) == 0 && (p-s)*(p-t) <= 0;
 }
 
 SegCrossType Segment2D::segCross(const Segment2D& other) {
