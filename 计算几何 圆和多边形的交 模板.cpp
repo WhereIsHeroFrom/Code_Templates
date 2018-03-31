@@ -10,18 +10,18 @@ const int MAXP = 110000;
 #define LL __int64
 typedef double Type;
 
-// ÈıÖµº¯Êı
+// ä¸‰å€¼å‡½æ•°
 int threeValue(Type d) {
     if(fabs(d) < 1e-6)
 		return 0;
 	return d > 0 ? 1 : -1;
 }
 
-// Á½Ïß¶Î½»µãÀàĞÍ
+// ä¸¤çº¿æ®µäº¤ç‚¹ç±»å‹
 enum SegCrossType {
 	SCT_NONE = 0,
-	SCT_CROSS = 1,         // Õı³£Ïà½»
-	SCT_ENDPOINT_ON = 2,   // ÆäÖĞÒ»ÌõÏß¶ÎµÄ¶ËµãÔÚÁíÒ»ÌõÉÏ
+	SCT_CROSS = 1,         // æ­£å¸¸ç›¸äº¤
+	SCT_ENDPOINT_ON = 2,   // å…¶ä¸­ä¸€æ¡çº¿æ®µçš„ç«¯ç‚¹åœ¨å¦ä¸€æ¡ä¸Š
 };
 
 class Point2D {
@@ -99,20 +99,20 @@ bool Point2D::operator <(const Point2D &p) const {
     return y + eps < p.y || ( y < p.y + eps && x + eps < p.x );
 }
 
-// !!!!×¢Òâ!!!!
-// Èç¹ûTypeÎªint£¬Ôò³Ë·¨¿ÉÄÜµ¼ÖÂint32Òç³ö£¬Ğ¡ĞÄ½÷É÷
-// µã³Ë
+// !!!!æ³¨æ„!!!!
+// å¦‚æœTypeä¸ºintï¼Œåˆ™ä¹˜æ³•å¯èƒ½å¯¼è‡´int32æº¢å‡ºï¼Œå°å¿ƒè°¨æ…
+// ç‚¹ä¹˜
 Type Point2D::operator*(const Point2D& other) const {
 	return x*other.x + y*other.y;
 }
-// ²æ³Ë
+// å‰ä¹˜
 Type Point2D::X(const Point2D& other) const {
 	return x*other.y - y*other.x;
 }
 
-// ÏòÁ¿aºÍbÊÇ·ñÔÚµ±Ç°ÏòÁ¿µÄÍ¬Ò»±ß
+// å‘é‡aå’Œbæ˜¯å¦åœ¨å½“å‰å‘é‡çš„åŒä¸€è¾¹
 bool Point2D::sameSide(Point2D a, Point2D b) {
-	// Çë±£Ö¤ µ±Ç°ÏòÁ¿ºÍa¡¢bÏòÁ¿µÄÆğµãÒ»ÖÂ
+	// è¯·ä¿è¯ å½“å‰å‘é‡å’Œaã€bå‘é‡çš„èµ·ç‚¹ä¸€è‡´
 	return threeValue(X(a)) * threeValue(X(b)) == 1;
 }
 
@@ -134,22 +134,22 @@ public:
 		return t - s;
 	}
 
-	// ¶¨µã²æ³Ë
-	// Íâ²¿ÕÒÒ»µãp£¬È»ºó¼ÆËã (p-s)¡Á(t-s)
+	// å®šç‚¹å‰ä¹˜
+	// å¤–éƒ¨æ‰¾ä¸€ç‚¹pï¼Œç„¶åè®¡ç®— (p-s)Ã—(t-s)
 	Type cross(const Point2D& p) const {
 		return (p - s).X(t - s);
 	}
 
-	// ¿çÁ¢²âÑé
-	// ½«µ±Ç°Ïß¶Î×÷ÎªÒ»ÌõºÜ³¤µÄÖ±Ïß£¬¼ì²âÏß¶ÎotherÊÇ·ñ¿çÁ¢ÔÚÕâÌõÖ±ÏßµÄÁ½±ß
+	// è·¨ç«‹æµ‹éªŒ
+	// å°†å½“å‰çº¿æ®µä½œä¸ºä¸€æ¡å¾ˆé•¿çš„ç›´çº¿ï¼Œæ£€æµ‹çº¿æ®µotheræ˜¯å¦è·¨ç«‹åœ¨è¿™æ¡ç›´çº¿çš„ä¸¤è¾¹
 	bool lineCross(const Segment2D& other) const;
 	
-	// µãÊÇ·ñÔÚÏß¶ÎÉÏ
+	// ç‚¹æ˜¯å¦åœ¨çº¿æ®µä¸Š
 	bool pointOn(const Point2D& p) const;
 
-	// Ïß¶ÎÅĞ½»
-	// 1.Í¨¹ı¿çÁ¢²âÑé
-	// 2.µãÊÇ·ñÔÚÏß¶ÎÉÏ
+	// çº¿æ®µåˆ¤äº¤
+	// 1.é€šè¿‡è·¨ç«‹æµ‹éªŒ
+	// 2.ç‚¹æ˜¯å¦åœ¨çº¿æ®µä¸Š
 	SegCrossType segCross(const Segment2D& other);
 };
 
@@ -158,18 +158,18 @@ bool Segment2D::lineCross(const Segment2D& other) const {
 }
 
 bool Segment2D::pointOn(const Point2D& p) const {
-	// Âú×ãÁ½¸öÌõ¼ş£º
-	//  1.²æ³ËÎª0£¬    (p-s)¡Á(t-s) == 0
-	//  2.µã³ËÎª-1»ò0£¬(p-s)*(p-t) <= 0
+	// æ»¡è¶³ä¸¤ä¸ªæ¡ä»¶ï¼š
+	//  1.å‰ä¹˜ä¸º0ï¼Œ    (p-s)Ã—(t-s) == 0
+	//  2.ç‚¹ä¹˜ä¸º-1æˆ–0ï¼Œ(p-s)*(p-t) <= 0
 	return cross(p) == 0 && (p-s)*(p-t) <= 0;
 }
 
 SegCrossType Segment2D::segCross(const Segment2D& other) {
 	if(this->lineCross(other) && other.lineCross(*this)) {
-		// Á½´Î¿çÁ¢¶¼³ÉÁ¢£¬Ôò±ØÈ»Ïà½»ÓëÒ»µã
+		// ä¸¤æ¬¡è·¨ç«‹éƒ½æˆç«‹ï¼Œåˆ™å¿…ç„¶ç›¸äº¤ä¸ä¸€ç‚¹
 		return SCT_CROSS;
 	}
-	// ÈÎÒâÒ»ÌõÏß¶ÎµÄÄ³¸ö¶ËµãÊÇ·ñÔÚÆäÖĞÒ»ÌõÏß¶ÎÉÏ£¬ËÄÖÖÇé¿ö
+	// ä»»æ„ä¸€æ¡çº¿æ®µçš„æŸä¸ªç«¯ç‚¹æ˜¯å¦åœ¨å…¶ä¸­ä¸€æ¡çº¿æ®µä¸Šï¼Œå››ç§æƒ…å†µ
 	if(pointOn(other.s) || pointOn(other.t) ||
 		other.pointOn(s) || other.pointOn(t) ) {
 			return SCT_ENDPOINT_ON;
@@ -187,8 +187,8 @@ public:
 	bool isParallelTo(const Line2D& );
 };
 
-// Á½Ìõ²»Æ½ĞĞµÄÖ±Ïß±ØÓĞ½»µã
-// ÀûÓÃ²æ³ËÇóÃæ»ı·¨µÄÏàËÆÈı½ÇĞÎ±ÈÖµµÃ³ö½»µã
+// ä¸¤æ¡ä¸å¹³è¡Œçš„ç›´çº¿å¿…æœ‰äº¤ç‚¹
+// åˆ©ç”¨å‰ä¹˜æ±‚é¢ç§¯æ³•çš„ç›¸ä¼¼ä¸‰è§’å½¢æ¯”å€¼å¾—å‡ºäº¤ç‚¹
 Point2D Line2D::getCrossPoint(const Line2D& other) {
 	double SA = (other.a - a).X(b - a);
 	double SB = (b - a).X(other.b - a);
@@ -256,14 +256,14 @@ double Polygon::area() {
     return sum / 2;
 }
 
-// ÇóÍ¹°ü
+// æ±‚å‡¸åŒ…
 void Polygon::getConvex(Polygon &c) {
     sort(p, p + n);
-    c.n = n;
+    c.n = n;		
+	for(int i = 0; i < n; ++i) {
+		c.p[i] = p[i];
+	}
 	if(n <= 2) {
-		for(int i = 0; i < n; ++i) {
-			c.p[i] = p[i];
-		}
 		return ;
 	}
         
@@ -283,19 +283,19 @@ void Polygon::getConvex(Polygon &c) {
     }
 }
 
-// ÊÇ·ñÍ¹¶à±ßĞÎ
+// æ˜¯å¦å‡¸å¤šè¾¹å½¢
 bool Polygon::isConvex() {
     bool s[3] = { false , false , false };
     p[n] = p[0], p[n + 1] = p[1];
     for ( int i = 0 ; i < n ; i ++ ) {
         s[threeValue(( p[i + 1] - p[i] ) * ( p[i + 2] - p[i] )) + 1] = true;
-		// ²æ³ËÓĞ×óÓĞÓÒ£¬¿Ï¶¨ÊÇ°¼µÄ
+		// å‰ä¹˜æœ‰å·¦æœ‰å³ï¼Œè‚¯å®šæ˜¯å‡¹çš„
         if ( s[0] && s[2] ) return false;
     }
     return true;
 }
 
-// µãÊÇ·ñÔÚÍ¹¶à±ßĞÎÄÚ
+// ç‚¹æ˜¯å¦åœ¨å‡¸å¤šè¾¹å½¢å†…
 bool Polygon::isPointInConvex(const Point2D &P) {
     bool s[3] = { false , false , false };
     p[n] = p[0];
@@ -307,7 +307,7 @@ bool Polygon::isPointInConvex(const Point2D &P) {
     return true;
 }
 
-// ×ª³ÉÄæÊ±ÕëË³Ğò
+// è½¬æˆé€†æ—¶é’ˆé¡ºåº
 void Polygon::convertToCounterClockwise() {
 	if(area() >= 0) {
 		return ;
@@ -332,7 +332,7 @@ Point2D Polygon::CalcBary() {
     return ret / area;
 }
 
-// µã¶Ô
+// ç‚¹å¯¹
 struct Point2D_Pair {
 	Point2D a, b;
 	Point2D_Pair() {}
@@ -357,7 +357,7 @@ double Point2D_Pair::len() {
 }
 
 void Point2D_Pair::print() {
-	printf("µã¶ÔÈçÏÂ£º\n");
+	printf("ç‚¹å¯¹å¦‚ä¸‹ï¼š\n");
 	a.print();
 	b.print(); 
 }
@@ -378,20 +378,20 @@ public:
 	static int getCenterByAngle(Point2D o, Point2D a, Point2D b, double r, Point2D& ret);
 };
 
-// ¸ø¶¨Á½¸öµãºÍÒ»¸ö°ë¾¶r£¬Çó¾­¹ıÕâÁ½µãµÄÔ²µÄÔ²ĞÄ¡£
-// ·µ»ØÖµ£ºÔ²ĞÄÊıÁ¿ £¨0/1/2£©
+// ç»™å®šä¸¤ä¸ªç‚¹å’Œä¸€ä¸ªåŠå¾„rï¼Œæ±‚ç»è¿‡è¿™ä¸¤ç‚¹çš„åœ†çš„åœ†å¿ƒã€‚
+// è¿”å›å€¼ï¼šåœ†å¿ƒæ•°é‡ ï¼ˆ0/1/2ï¼‰
 int Circle::getCenterByTwoPoints(Point2D_Pair p, double r, Point2D_Pair& ret) {
 	double chordal = p.len();
 	int rc = threeValue(r - chordal/2);
 	if(rc == -1) {
-		// 1.°ë¾¶Ğ¡ÓÚÏÒ³¤Ò»°ë£¬ÎŞ½â
+		// 1.åŠå¾„å°äºå¼¦é•¿ä¸€åŠï¼Œæ— è§£
 		return 0;
 	}else if(rc == 0) {
-		// 2.°ë¾¶µÈÓÚÏÒ³¤Ò»°ë£¬Ô²ĞÄÎ¨Ò»£¬ÎªÏÒÖĞµã
+		// 2.åŠå¾„ç­‰äºå¼¦é•¿ä¸€åŠï¼Œåœ†å¿ƒå”¯ä¸€ï¼Œä¸ºå¼¦ä¸­ç‚¹
 		ret.a = ret.b = p.center();
 		return 1;
 	}else {
-		// 3.°ë¾¶´óÓÚÏÒ³¤Ò»°ë£¬Ôò°ë¾¶ÎªĞ±±ß£¬ÏÒ³¤Ò»°ëÎªÖ±½Ç±ß£¬¿É»ñµÃÁ½¸öÔ²ĞÄ
+		// 3.åŠå¾„å¤§äºå¼¦é•¿ä¸€åŠï¼Œåˆ™åŠå¾„ä¸ºæ–œè¾¹ï¼Œå¼¦é•¿ä¸€åŠä¸ºç›´è§’è¾¹ï¼Œå¯è·å¾—ä¸¤ä¸ªåœ†å¿ƒ
 		double verLen = sqrt(r*r - chordal*chordal/4);
 		Point2D ip = p.direction();
 		ip.normalize();
@@ -401,9 +401,9 @@ int Circle::getCenterByTwoPoints(Point2D_Pair p, double r, Point2D_Pair& ret) {
 	}
 }
 
-// ¸ø¶¨oa-obÕâ¶Î½Ç¶È£¬Çó¿¨ÔÚÕâ¸ö½ÇÄÚµÄÔ²µÄÔ²ĞÄ
-// ×¢Òâ£ºÇë±£Ö¤obÔÚoaµÄÄæÊ±Õë·½Ïò£¬ÇÒ|oa| != |ob|
-// ·µ»ØÖµ£ºÔ²ĞÄÊıÁ¿ (0/1)
+// ç»™å®šoa-obè¿™æ®µè§’åº¦ï¼Œæ±‚å¡åœ¨è¿™ä¸ªè§’å†…çš„åœ†çš„åœ†å¿ƒ
+// æ³¨æ„ï¼šè¯·ä¿è¯obåœ¨oaçš„é€†æ—¶é’ˆæ–¹å‘ï¼Œä¸”|oa| != |ob|
+// è¿”å›å€¼ï¼šåœ†å¿ƒæ•°é‡ (0/1)
 int Circle::getCenterByAngle(Point2D o, Point2D a, Point2D b, double r, Point2D& ret) {
 	Vector2D OA = a - o;
 	Vector2D OB = b - o;
@@ -412,7 +412,7 @@ int Circle::getCenterByAngle(Point2D o, Point2D a, Point2D b, double r, Point2D&
 	if(bd < ad) {
 		bd += 2*PI;
 	}
-	// Á½ÉäÏß¹¹³ÉµÄ½Ç >= 180¶È£¬ÔòÎŞ·¨·ÅÈëÔ²
+	// ä¸¤å°„çº¿æ„æˆçš„è§’ >= 180åº¦ï¼Œåˆ™æ— æ³•æ”¾å…¥åœ†
 	if( threeValue(bd - ad - PI) >= 0 ) {
 		return 0;
 	}
@@ -434,7 +434,7 @@ double Circle::getOriginTriangleArea(Point2D A, Point2D B) {
 	double angleAOB = acos(OA * OB / lenA / lenB);
 
 	if(!sign) {
-		// Èı½ÇĞÎÍË»¯ÎªÖ±Ïß
+		// ä¸‰è§’å½¢é€€åŒ–ä¸ºç›´çº¿
 		return 0;
 	}
 
@@ -442,55 +442,55 @@ double Circle::getOriginTriangleArea(Point2D A, Point2D B) {
 	line2DTriple lt(A, B);
 	double H = lt.getPointDist(center);
 
-	// Çé¿ö1£ºÔ²ĞÄµ½µÚÈıÌõ±ß£¨²»¹ıÔ²ĞÄÄÇÌõ±ß£©¾àÀë´óÓÚµÈÓÚ°ë¾¶¡£
+	// æƒ…å†µ1ï¼šåœ†å¿ƒåˆ°ç¬¬ä¸‰æ¡è¾¹ï¼ˆä¸è¿‡åœ†å¿ƒé‚£æ¡è¾¹ï¼‰è·ç¦»å¤§äºç­‰äºåŠå¾„ã€‚
 	if(threeValue(H-radius) >= 0) {
 		return sign*getOriginFanArea(angleAOB);
 	}
 
 	int lenACmpR = threeValue(lenA - radius);
 	int lenBCmpR = threeValue(lenB - radius);
-	// Çé¿ö2£ºÔ²ĞÄµ½µÚÈıÌõ±ß¾àÀëĞ¡ÓÚ°ë¾¶R
+	// æƒ…å†µ2ï¼šåœ†å¿ƒåˆ°ç¬¬ä¸‰æ¡è¾¹è·ç¦»å°äºåŠå¾„R
 	
-	// 2.a£ºOAºÍOB¶¼Ğ¡ÓÚµÈÓÚR
+	// 2.aï¼šOAå’ŒOBéƒ½å°äºç­‰äºR
 	if( lenACmpR <= 0 && lenBCmpR <= 0) {
 		return OA.X(OB) / 2;
 	}
-	// 2.bc£ºOAºÍOB¶¼´óÓÚµÈÓÚR
+	// 2.bcï¼šOAå’ŒOBéƒ½å¤§äºç­‰äºR
 	if( lenACmpR >= 0 && lenBCmpR >= 0) {
 		if(OH.sameSide(OA, OB)) {
-			// Í¬±ß£¬ÉÈĞÎ
+			// åŒè¾¹ï¼Œæ‰‡å½¢
 			return sign*getOriginFanArea(angleAOB);
 		}else {
-			// Á½±ß£¬ÉÈĞÎÏà¼õÔÙ²¹ÉÏÒ»¸öÈı½ÇĞÎ
+			// ä¸¤è¾¹ï¼Œæ‰‡å½¢ç›¸å‡å†è¡¥ä¸Šä¸€ä¸ªä¸‰è§’å½¢
 			double angleCOD = 2*acos(H / radius);
 			double fanArea = getOriginFanArea(angleAOB-angleCOD);
 			double triangleArea = H*radius*sin(angleCOD/2);
 			return sign*(fanArea + triangleArea);
 		}
 	}
-	// 2.d£ºOAºÍOB Ò»Ìõ´óÓÚR£¬Ò»ÌõĞ¡ÓÚµÈÓÚR
-	// ÈÃA³ÉÎªĞ¡µÄÄÇÒ»Ìõ
+	// 2.dï¼šOAå’ŒOB ä¸€æ¡å¤§äºRï¼Œä¸€æ¡å°äºç­‰äºR
+	// è®©Aæˆä¸ºå°çš„é‚£ä¸€æ¡
 	if(lenA > lenB) {
 		Point2D tmp = A; A = B; B = tmp;
 		OA = A - center; lenA = OA.len();
 		OB = B - center; lenB = OB.len();
 	}
 	double lenAB = (B-A).len();
-	// ÓàÏÒ¶¨Àí
+	// ä½™å¼¦å®šç†
 	double angleBAO = acos( (lenAB*lenAB+lenA*lenA-lenB*lenB) / 2 / lenAB / lenA );
-	// ÕıÏÒ¶¨Àí
+	// æ­£å¼¦å®šç†
 	double angleACO = asin( sin(angleBAO)/radius*lenA );
-	// Èı½ÇĞÎÄÚ½ÇºÍ
+	// ä¸‰è§’å½¢å†…è§’å’Œ
 	double angleAOC = PI - angleBAO - angleACO;
 
 	return sign*(getOriginFanArea(angleAOB - angleAOC) + 1/2.0*sin(angleAOC)*radius*lenA);
 }
 
 double Circle::intersectWithPolygon(Polygon &poly) {
-	// 1.¶à±ßĞÎ×ª»»³ÉÄæÊ±Õë
+	// 1.å¤šè¾¹å½¢è½¬æ¢æˆé€†æ—¶é’ˆ
 	poly.convertToCounterClockwise();
 
-	// 2.Ãæ»ı¼ÆËã
+	// 2.é¢ç§¯è®¡ç®—
 	double sum = 0;
 	for(int i = 0; i < poly.n; ++i) {
 		sum += getOriginTriangleArea(poly.p[i], poly.p[i+1]);
