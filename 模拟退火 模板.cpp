@@ -1,3 +1,16 @@
+/*
+模拟退火
+    1、初温控制 尽量取最大值
+    2、初始点集 可以根据问题特点 取1（优先考虑）个或多个
+    3、最小温度精度 控制在问题需要的精度的下一个数量级
+    4、候选点集尽量取得能力范围之内的多者
+    5、最重要：模拟退火的时候遇到较差的解，根据概率性选择较差解；当然，也要根据实际情况放弃较差解。
+    
+Author: WhereIsHeroFrom
+Update Time: 2018-3-31
+Algorithm Complexity: 取决于下降率的非2为底的log级复杂度
+*/
+
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
@@ -223,6 +236,7 @@ void simulatedAnnealing::start(double T, Point3D B, Point3DSet& PS) {
 			}else {
 				// 7.没有原来的解优，则以一定概率进行接收
 				// 这个概率上限会越来越小，直到最后趋近于0
+				// 理论上，这个分支也可能不考虑
 				if( randIn01() < exp(-deltaEval/temperature) ) {
 					x[i] = nextOpt;
 				}	
