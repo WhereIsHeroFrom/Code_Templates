@@ -6,7 +6,7 @@ using namespace std;
 
 const int MAXP = 110000;
 #define PI acos(-1.0)
-#define eps 1e-15
+#define eps 1e-6
 #define LL __int64
 typedef double Type;
 
