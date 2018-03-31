@@ -115,12 +115,12 @@ private:
 
 	bool valid(const Point3D& pt);
 	double randIn01();
-	double evaluateFunc(const Point3D& pt);
 	Point3D getRandomPoint();
 	Vector3D getRandomDirection();
 	Point3D getNext(const Point3D& now);
 public:
 	void start(double T, Point3D B, Point3DSet& pointSet);
+	double evaluateFunc(const Point3D& pt);
 	Point3D getSolution();
 	static simulatedAnnealing& Instance();
 };
