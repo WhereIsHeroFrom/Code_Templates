@@ -6,10 +6,10 @@
 using namespace std;
 
 #define PI acos(-1.0)
-#define eps 1e-15
+#define eps 1e-6
 typedef double Type;
 
-// ÈıÖµº¯Êı
+// ä¸‰å€¼å‡½æ•°
 int threeValue(Type d) {
     if(fabs(d) < 1e-6)
 		return 0;
@@ -95,17 +95,17 @@ struct Point3DSet {
 };
 
 /*
-	Ä£ÄâÍË»ğ-Ä£°å
-	×îÔ¶µÄ×î½ü¾àÀë
+	æ¨¡æ‹Ÿé€€ç«-æ¨¡æ¿
+	æœ€è¿œçš„æœ€è¿‘è·ç¦»
 */
 class simulatedAnnealing {
-	// ÎÈÌ¬£¨×îµÍ£©ÎÂ¶È
+	// ç¨³æ€ï¼ˆæœ€ä½ï¼‰æ¸©åº¦
 	static const double minTemperature;
-	// ÎÂ¶ÈÏÂ½µÂÊ
+	// æ¸©åº¦ä¸‹é™ç‡
 	static const double deltaTemperature;
-	// ²¢ĞĞºòÑ¡½â¸öÊı
+	// å¹¶è¡Œå€™é€‰è§£ä¸ªæ•°
 	static const int solutionCount;
-	// Ã¿¸ö½âµÄµü´ú´ÎÊı
+	// æ¯ä¸ªè§£çš„è¿­ä»£æ¬¡æ•°
 	static const int candidateCount;
 private:
 	Point3D bound;
@@ -125,14 +125,14 @@ public:
 	static simulatedAnnealing& Instance();
 };
 
-// ËÄ¸öµ÷Õû²ÎÊı
-// ÎÈÌ¬£¨×îµÍ£©ÎÂ¶È
+// å››ä¸ªè°ƒæ•´å‚æ•°
+// ç¨³æ€ï¼ˆæœ€ä½ï¼‰æ¸©åº¦
 const double simulatedAnnealing::minTemperature = 1e-2;
-// ÎÂ¶ÈÏÂ½µÂÊ
+// æ¸©åº¦ä¸‹é™ç‡
 const double simulatedAnnealing::deltaTemperature = 0.95;
-// ²¢ĞĞºòÑ¡½â¸öÊı
+// å¹¶è¡Œå€™é€‰è§£ä¸ªæ•°
 const int simulatedAnnealing::solutionCount = 10;
-// Ã¿¸ö½âµÄµü´ú´ÎÊı
+// æ¯ä¸ªè§£çš„è¿­ä»£æ¬¡æ•°
 const int simulatedAnnealing::candidateCount = 30;
 
 bool simulatedAnnealing::valid(const Point3D& pt) {
@@ -144,12 +144,12 @@ double simulatedAnnealing::randIn01() {
 }
 
 /*
-	¹À¼Ûº¯Êı£¬¹ÀÖµÔ½Ğ¡Ô½ÓÅ
-	²»Í¬ÎÊÌâ£¬»ù±¾Ö»ĞèÒªĞŞ¸Ä¹À¼Ûº¯Êı£¬Õâ¸öÊÇ ×îÔ¶µÄ×î½ü¾àÀë
+	ä¼°ä»·å‡½æ•°ï¼Œä¼°å€¼è¶Šå°è¶Šä¼˜
+	ä¸åŒé—®é¢˜ï¼ŒåŸºæœ¬åªéœ€è¦ä¿®æ”¹ä¼°ä»·å‡½æ•°ï¼Œè¿™ä¸ªæ˜¯ æœ€è¿œçš„æœ€è¿‘è·ç¦»
 */
 double simulatedAnnealing::evaluateFunc(const Point3D& pt) {
 	// TODO
-	// ×îĞ¡¾àÀë Ô½´óÔ½ÓÅ£¬ËùÒÔ¹ÀÖµÈ¡Ïà·´Êı
+	// æœ€å°è·ç¦» è¶Šå¤§è¶Šä¼˜ï¼Œæ‰€ä»¥ä¼°å€¼å–ç›¸åæ•°
 	double minDist = INF;
 	for(int i = 0; i < pointSet.n; ++i) {
 		double dist = (pointSet.p[i] - pt).len();
@@ -160,14 +160,14 @@ double simulatedAnnealing::evaluateFunc(const Point3D& pt) {
 }
 
 /*
-	Ëæ»úÒ»¸ö[0 - bound]µÄµã£¬Èç¹ûÒªÇóÓĞ¸ºÊıµã£¬Çë½«Õû¸ö×ø±êÖá½øĞĞÆ½ÒÆ
+	éšæœºä¸€ä¸ª[0 - bound]çš„ç‚¹ï¼Œå¦‚æœè¦æ±‚æœ‰è´Ÿæ•°ç‚¹ï¼Œè¯·å°†æ•´ä¸ªåæ ‡è½´è¿›è¡Œå¹³ç§»
 */
 Point3D simulatedAnnealing::getRandomPoint() {
 	return Point3D(bound.getx() * randIn01(), bound.gety() * randIn01(), 0);//bound.getz() * randIn01());
 }
 
 /*
-	Ëæ»úÒ»¸ö·½Ïò£¬×¢Òâ·½Ïò¿ÉÒÔÊÇÈÎºÎ·½Ïò£¬±ğÍüÁË¸ºÊı
+	éšæœºä¸€ä¸ªæ–¹å‘ï¼Œæ³¨æ„æ–¹å‘å¯ä»¥æ˜¯ä»»ä½•æ–¹å‘ï¼Œåˆ«å¿˜äº†è´Ÿæ•°
 */
 Vector3D simulatedAnnealing::getRandomDirection() {
 	Vector3D v(randIn01()-0.5, randIn01()-0.5, 0);//randIn01()-0.5);
@@ -179,26 +179,26 @@ Point3D simulatedAnnealing::getNext(const Point3D& now) {
 }
 
 /*
-  Ä£ÄâÍË»ğ
+  æ¨¡æ‹Ÿé€€ç«
 */
 void simulatedAnnealing::start(double T, Point3D B, Point3DSet& PS) {
-	// 0.³õÊ¼»¯ÎÂ¶È
+	// 0.åˆå§‹åŒ–æ¸©åº¦
 	temperature = T;
 	bound = B;
 	pointSet = PS;
 	int i, j;
 
-	// 1.Ëæ»úÉú³ÉsolutionCount¸ö³õÊ¼½â
+	// 1.éšæœºç”ŸæˆsolutionCountä¸ªåˆå§‹è§£
 	for(i = 0; i < solutionCount; ++i) {
 		x[i] = getRandomPoint();
 	}
 
 	while (temperature > minTemperature) {
-		// 2.¶ÔÃ¿¸öµ±Ç°½â½øĞĞ×îÓÅ»¯Ñ¡Ôñ
+		// 2.å¯¹æ¯ä¸ªå½“å‰è§£è¿›è¡Œæœ€ä¼˜åŒ–é€‰æ‹©
 		for(i = 0; i < solutionCount; ++i) {
 			double nextEval = INF;
 			Point3D nextOpt;
-			// 3.¶ÔÓÚÃ¿¸öµ±Ç°½â£¬Ëæ»úÑ¡È¡¸½½üµÄcandidateCount¸öµã£¬²¢ÇÒ½«×îÓÅµÄÄÇ¸ö½â±£Áô
+			// 3.å¯¹äºæ¯ä¸ªå½“å‰è§£ï¼Œéšæœºé€‰å–é™„è¿‘çš„candidateCountä¸ªç‚¹ï¼Œå¹¶ä¸”å°†æœ€ä¼˜çš„é‚£ä¸ªè§£ä¿ç•™
 			for(j = 0; j < candidateCount; ++j) {
 				Point3D next = getNext(x[i]);
 				if(!valid(next)) {
@@ -211,18 +211,18 @@ void simulatedAnnealing::start(double T, Point3D B, Point3DSet& PS) {
 				}
 			}
 
-			// 4.Ã»ÓĞÉú³É¿ÉĞĞ½â
+			// 4.æ²¡æœ‰ç”Ÿæˆå¯è¡Œè§£
 			if(nextEval >= INF)
 				continue;
 
-			// 5.¼ÆËãÉú³ÉµÄ×îÓÅ½âºÍÔ­À´µÄ½â½øĞĞ±È½Ï
+			// 5.è®¡ç®—ç”Ÿæˆçš„æœ€ä¼˜è§£å’ŒåŸæ¥çš„è§£è¿›è¡Œæ¯”è¾ƒ
 			double deltaEval = evaluateFunc(nextOpt) - evaluateFunc(x[i]);
 			if(deltaEval < 0) {
-				// 6.±ÈÔ­À´µÄ½â¸üÓÅ£¬Ö±½ÓÌæ»»
+				// 6.æ¯”åŸæ¥çš„è§£æ›´ä¼˜ï¼Œç›´æ¥æ›¿æ¢
 				x[i] = nextOpt;
 			}else {
-				// 7.Ã»ÓĞÔ­À´µÄ½âÓÅ£¬ÔòÒÔÒ»¶¨¸ÅÂÊ½øĞĞ½ÓÊÕ
-				// Õâ¸ö¸ÅÂÊÉÏÏŞ»áÔ½À´Ô½Ğ¡£¬Ö±µ½×îºóÇ÷½üÓÚ0
+				// 7.æ²¡æœ‰åŸæ¥çš„è§£ä¼˜ï¼Œåˆ™ä»¥ä¸€å®šæ¦‚ç‡è¿›è¡Œæ¥æ”¶
+				// è¿™ä¸ªæ¦‚ç‡ä¸Šé™ä¼šè¶Šæ¥è¶Šå°ï¼Œç›´åˆ°æœ€åè¶‹è¿‘äº0
 				if( randIn01() < exp(-deltaEval/temperature) ) {
 					x[i] = nextOpt;
 				}	
