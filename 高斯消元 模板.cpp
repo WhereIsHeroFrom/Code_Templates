@@ -18,6 +18,7 @@ public:
     ...
     ...
     d[r-1][0] * x[0] + d[r-1][1] * x[1] + ... + d[r-1][c-1] * x[c-1] = d[r-1][c];
+    
     */
     
     void swap_row(int ra, int rb) {
