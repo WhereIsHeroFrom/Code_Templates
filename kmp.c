@@ -1,68 +1,77 @@
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
 
+using namespace std;
+
+#pragma warning(disable:4996)
+
+#define NULL_MATCH (-1)
+#define Type char
 #define MAXN 1000010
 
 /*
-    NULL_MATCH must be -1
- */
-#define NULL_MATCH -1
+	"ababaaba"
 
-
-/*
-    str[...i] ：   表示子串 str[0...i] 的某个真后缀   （不包含str[0...i]本身）
-    str[0...] ：   表示子串 str[0...i] 的某个真前缀   （不包含str[0...i]本身）
-    next[i]   ：   表示满足  (str[0...] == str[...i])  时，的前缀(后缀)的最大长度减1
-                   即：     (str[0 ... next[i]] == str[i-next[i] ... i])
- */
-void genNext(char *str, int* next) {
-    int i, j;
-    int len = strlen(str);
-    /*
-        1个字符的时候，没有真后缀，所以 next[0] = -1
-     */
-    next[0] = NULL_MATCH;
-    for(j = NULL_MATCH, i = 1; i < len; i++) {
-        /*
-            在保证 str[i-1] == str[j-1] 的情况下，如果能找到  str[i] == str[j]， 那么 next[i] = j;
-        */
-        while( j > NULL_MATCH && str[i] != str[j+1] ) 
-            j = next[j];
-        if(str[i] == str[j+1]) j ++;
-        next[i] = j;
-    } 
-}
-
-/* 
-    src[0 ... n-1] 目标串
-    match[0 ... m-1] 匹配串 
 */
-int KMP(const char *src, char *match, int *next) {
-    int i, j;
-    int n = strlen(src);
-    int m = strlen(match);
-    int cnt = 0;
-    for(j = NULL_MATCH, i = 0; i < n; i++) {
-        while( j > NULL_MATCH && src[i] != match[j+1]) j = next[j];
-        if(src[i] == match[j+1]) j++;
-        if(j == m - 1) {
-            cnt ++;
-            j = next[j];
-        }
-    }
-    return cnt;
+void GenNext(int *next, Type* M, int MLen) {
+	// 0. 用 NULL_MATCH(-1) 代表一定没有真前缀，0的位置一定没有真前缀，所以为 NULL_MATCH
+	int MPos = NULL_MATCH;
+	next[0] = MPos;
+	for (int TPos = 1; TPos < MLen; ++TPos) {
+		// 1. M[TPos-MPos-1...TPos-1] 和 M[0...MPos] 完全匹配 
+		//    检测 M[TPos] 和 M[MPos + 1] 是否匹配，不匹配，则找下一个 MPos' = next[MPos]；
+		while (MPos != NULL_MATCH && M[TPos] != M[MPos + 1])
+			MPos = next[MPos];
+		// 2. 正确匹配上，自增 MPos
+		if (M[TPos] == M[MPos + 1]) MPos++;
+		// 3. M[TPos-MPos...TPos] 和 M[0...MPos] 完全匹配 
+		next[TPos] = MPos;                                    
+	}
+	/*for (int i = 0; i < MLen; ++i) {
+		printf("|%d", i);
+	}
+	puts("");
+
+	for (int i = 0; i < MLen; ++i) {
+		printf("|%c", M[i]);
+	}
+	puts("");
+
+	for (int i = 0; i < MLen; ++i) {
+		printf("|-");
+	}
+	puts("");
+
+
+
+	for (int i = 0; i < MLen; ++i) {
+		printf("%d --> %d\n", i, next[i]);
+	}
+	puts("");*/
+
+	/*for (int i = 0; i < MLen; ++i) {
+		printf("|%d", next[i]);
+	}
+	puts("");*/
+	
 }
 
-char T[MAXN], S[MAXN];
-int next[MAXN];
-
-int main() {
-    int t;
-    scanf("%d", &t);
-    while(t--) {
-        scanf("%s %s", T, S);
-        genNext(T, next);
-        printf("%d\n", KMP(S, T, next) );
-    }
-    return 0;
+int KMP(int *next, Type* M, int MLen, Type *T, int TLen) {
+	// 1. 这里设置成 -1 的目的是：
+	// 最初认为的情况是 目标串的空串 和 匹配串的空串 一定匹配
+	int MPos = NULL_MATCH;
+	for (int TPos = (TLen+1)/2; TPos < TLen; ++TPos) {
+		// 2. 前提是 T[...TPos-1] == M[0...MPos] （MPos == -1 则代表两个空串匹配，同样成立)
+		//    如果 T[TPos] != M[MPos + 1]，则 MPos = MPos' 继续匹配
+		while (MPos != NULL_MATCH && T[TPos] != M[MPos + 1])
+			MPos = next[MPos];
+		// 3. 当 T[TPos] == M[MPos + 1] 则 TPos++, MPos++;
+		if (T[TPos] == M[MPos + 1]) MPos++;
+		// 4. 匹配完毕，返回 目标串 第一个匹配的位置
+	}
+	return MPos;
 }
+
+
+
+int Next[MAXN];
+Type T[MAXN], TT[MAXN], M[MAXN];
