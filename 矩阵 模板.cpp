@@ -55,7 +55,7 @@ public:
         return I;
     }
     
-    Matrix getPow(int e) {
+    Matrix getPow(unsigned __int64 e) {
         Matrix tmp = *this;
         Matrix ret = Identity(n);
         while(e) {
