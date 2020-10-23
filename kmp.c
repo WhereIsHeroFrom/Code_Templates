@@ -59,7 +59,7 @@ int KMP(int *next, Type* M, int MLen, Type *T, int TLen) {
 	// 1. 这里设置成 -1 的目的是：
 	// 最初认为的情况是 目标串的空串 和 匹配串的空串 一定匹配
 	int MPos = NULL_MATCH;
-	for (int TPos = (TLen+1)/2; TPos < TLen; ++TPos) {
+	for (int TPos = 0; TPos < TLen; ++TPos) {
 		// 2. 前提是 T[...TPos-1] == M[0...MPos] （MPos == -1 则代表两个空串匹配，同样成立)
 		//    如果 T[TPos] != M[MPos + 1]，则 MPos = MPos' 继续匹配
 		while (MPos != NULL_MATCH && T[TPos] != M[MPos + 1])
@@ -67,6 +67,9 @@ int KMP(int *next, Type* M, int MLen, Type *T, int TLen) {
 		// 3. 当 T[TPos] == M[MPos + 1] 则 TPos++, MPos++;
 		if (T[TPos] == M[MPos + 1]) MPos++;
 		// 4. 匹配完毕，返回 目标串 第一个匹配的位置
+		if (MPos == MLen - 1) {
+			// ...
+		}
 	}
 	return MPos;
 }
