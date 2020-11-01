@@ -151,14 +151,14 @@ public:
 Matrix Matrix::s_kMatrix[64];
 Matrix Matrix::s_kMultiplyTemp;
 
-LL AArray[][MAXN] = {
+LL AArray[MAXN][MAXN] = {
 	{ 1, 4, 4, 1 },
 	{ 0, 4, 4, 1 },
 	{ 0, 2, 1, 0 },
 	{ 0, 1, 0, 0 },
 };
 
-LL BArray[][MAXN] = {
+LL BArray[MAXN][MAXN] = {
 	{ 1 },
 	{ 1 },
 	{ 0 },
