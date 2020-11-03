@@ -1,4 +1,13 @@
-#define MAXN 4
+/*
+矩阵二分快速幂
+递推公式的神级加速，转换成矩阵幂求解；
+矩阵相乘的最内层循环加和如果不溢出，则憋着不取模；
+Author: WhereIsHeroFrom
+Update Time: 2020-11-03
+Algorithm Complexity: O(m^3log(n))
+*/
+
+#define MAXN 100
 #define LL __int64
 LL MOD = 1234567891;
 
@@ -123,15 +132,27 @@ public:
 	// 扩展矩阵用于求A + A^2 + A^3 + ... + A^n
 	void getExtendMatrix(Matrix& ret, Matrix& I) {
 		ret.n = ret.m = n * 2;
+		ret.Reset(n * 2, n * 2);
 		ret.copyMatrix(*this, 0, 0);
 		ret.copyMatrix(*this, 0, n);
 		ret.copyMatrix(I, n, n);
 	}
 
+	// 获取 this 矩阵的 (r,c) - (n,m) 的子矩阵存到 ret
+	void getSubMatrix(Matrix& ret, int r, int c, int n, int m) {
+		ret.n = n;
+		ret.m = m;
+		for (int i = r; i < r + n; i++) {
+			for (int j = c; j < c + m; j++) {
+				ret.pkData[i - r][j - c] = pkData[i][j];
+			}
+		}
+	}
+
 	// 将矩阵A拷贝到当期矩阵的(r, c)位置
 	void copyMatrix(Matrix& A, int r, int c) {
 		for (int i = r; i < r + A.n; i++) {
-			for (int j = c; j < c + A.n; j++) {
+			for (int j = c; j < c + A.m; j++) {
 				pkData[i][j] = A.pkData[i - r][j - c];
 			}
 		}
