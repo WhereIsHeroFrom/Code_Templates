@@ -94,6 +94,16 @@ public:
 		}
 	}
 
+	static void Add(const Matrix &me, const Matrix& other, Matrix& ret) {
+		ret.Reset(me.n, other.m);
+		int i, j;
+		for (i = 0; i < me.n; i++) {
+			for (j = 0; j < me.m; j++) {
+				ret.pkData[i][j] = (me.pkData[i][j] + other.pkData[i][j]) % MOD;
+			}
+		}
+	}
+
 	void Reset(int nn, int mm, LL data[][MAXN]) {
 		n = nn;
 		m = mm;
