@@ -1,0 +1,38 @@
+﻿Build started 2020/12/24 12:33:49.
+     1>Project "F:\C++Test\Code_Templates\图论\广度优先搜索\PushBoxGame\PushBoxGame\PushBoxGame.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"D:\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt hash.cpp main.cpp path.cpp pushboxgame.cpp pushboxstate.cpp
+         hash.cpp
+         main.cpp
+     1>main.cpp(11): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Microsoft Visual Studio 12.0\VC\include\stdio.h(283) : see declaration of 'scanf'
+     1>main.cpp(12): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+         path.cpp
+         pushboxgame.cpp
+     1>pushboxgame.cpp(19): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Microsoft Visual Studio 12.0\VC\include\stdio.h(226) : see declaration of 'freopen'
+     1>pushboxgame.cpp(21): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Microsoft Visual Studio 12.0\VC\include\stdio.h(283) : see declaration of 'scanf'
+     1>pushboxgame.cpp(28): warning C4996: 'gets': This function or variable may be unsafe. Consider using gets_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Microsoft Visual Studio 12.0\VC\include\stdio.h(254) : see declaration of 'gets'
+     1>pushboxgame.cpp(39): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 D:\Microsoft Visual Studio 12.0\VC\include\stdio.h(226) : see declaration of 'freopen'
+     1>pushboxgame.cpp(213): warning C4101: 'manValue' : unreferenced local variable
+     1>pushboxgame.cpp(341): warning C4018: '<' : signed/unsigned mismatch
+         pushboxstate.cpp
+     1>pushboxstate.cpp(130): warning C4244: 'initializing' : conversion from '__int64' to 'int', possible loss of data
+       Link:
+         D:\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\C++Test\Code_Templates\图论\广度优先搜索\PushBoxGame\Release\PushBoxGame.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"D:\Visual Leak Detector\lib\Win32" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\C++Test\Code_Templates\图论\广度优先搜索\PushBoxGame\Release\PushBoxGame.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\C++Test\Code_Templates\图论\广度优先搜索\PushBoxGame\Release\PushBoxGame.lib" /MACHINE:X86 /SAFESEH Release\hash.obj
+         Release\main.obj
+         Release\path.obj
+         Release\pushboxgame.obj
+         Release\pushboxstate.obj
+         Generating code
+         Finished generating code
+         PushBoxGame.vcxproj -> F:\C++Test\Code_Templates\图论\广度优先搜索\PushBoxGame\Release\PushBoxGame.exe
+     1>Done Building Project "F:\C++Test\Code_Templates\图论\广度优先搜索\PushBoxGame\PushBoxGame\PushBoxGame.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.27
