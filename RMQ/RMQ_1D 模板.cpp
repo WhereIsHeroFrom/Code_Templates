@@ -26,16 +26,12 @@ void RMQ_Init(ValueType A[], int ALen, int(*f)[MAXN]) {
 		if ((1 << k) == i) k++;
 	}
 	for (i = 0; i < MAXM; i++) {
-		for (j = 1; j <= ALen; j++) {
+		for (j = 1; j + (1<<i) - 1 <= ALen; j++) {
 			if (i == 0) {
 				f[i][j] = j;
 			}
 			else {
-				f[i][j] = f[i-1][j];
-				int ridx = j + (1 << (i - 1));
-				if (ridx <= ALen) {
-					f[i][j] = RMQ_MinIndex(A, f[i-1][j], f[i-1][ridx]);
-				}
+				f[i][j] = RMQ_MinIndex(A, f[i-1][j], f[i-1][j + (1 << (i - 1))]);
 			}
 		}
 	}
@@ -60,7 +56,13 @@ int RMQ_Query(ValueType A[], int(*f)[MAXN], int a, int b) {
 
 
 ValueType MinVal[MAXN], MaxVal[MAXN];
-ValueType fMin[MAXM][MAXN], fMax[MAXM][MAXN];
+int fMin[MAXM][MAXN], fMax[MAXM][MAXN];
+
+ValueType QueryMaxMinDiff(int l, int r) {
+	ValueType minval =  MinVal[ RMQ_Query(MinVal, fMin, l, r) ];
+	ValueType maxval = -MaxVal[ RMQ_Query(MaxVal, fMax, l, r) ];
+	return maxval - minval;
+}
 
 int main() {
 	int n, m;
@@ -77,9 +79,7 @@ int main() {
 		while(m--) {
 			int l, r;
 			scanf("%d %d", &l, &r);
-			int minval =  MinVal[ RMQ_Query(MinVal, fMin, l, r) ];
-			int maxval = -MaxVal[ RMQ_Query(MaxVal, fMax, l, r) ];
-			printf("%d\n", maxval - minval);
+			printf("%d\n", QueryMaxMinDiff(l, r) );
 		}
 		
 	} 
