@@ -30,7 +30,7 @@ ValueType RMQ_GetValue(ValueType A[MAXN][MAXN], int code) {
 }
 
 int RMQ_MinIndex(ValueType A[MAXN][MAXN], int a, int b) {
-    return RMQ_GetValue(A, b) > RMQ_GetValue(A, a) ? b : a;
+    return RMQ_GetValue(A, b) < RMQ_GetValue(A, a) ? b : a;
 }
 
 void RMQ_Init(ValueType A[MAXN][MAXN], int XLen, int YLen, int f[MAXM][MAXM][MAXN][MAXN]) {
