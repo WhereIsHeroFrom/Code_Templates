@@ -40,27 +40,34 @@ void RMQ_Init(ValueType A[MAXN][MAXN], int XLen, int YLen, int f[MAXM][MAXM][MAX
 		if ((1 << k) == i) k++;
 	}
 	
-	for (i = 0; i < MAXM; i++) {
-		for(j = 0; j < MAXM; ++j) {
-			for(x = 1; x + (1<<i) - 1 <= XLen; ++x) {
-				for(y = 1; y + (1<<j) - 1 <= YLen; ++y) {
-					int &rf = f[i][j][x][y];
-					
-					if(i == 0 && j == 0) {
-						rf = RMQ_Pack(x, y);
-					}else if(i == 0) {
-						rf = RMQ_MinIndex(A, f[i][j-1][x][y], f[i][j-1][x][y + (1<<(j-1))]);
-					}else if(j == 0) {
-						rf = RMQ_MinIndex(A, f[i-1][j][x][y], f[i-1][j][x + (1<<(i-1))][y]);
-					}else {
-						int a = RMQ_MinIndex(A, f[i][j-1][x][y], f[i][j-1][x][y + (1<<(j-1))]);
-						int b = RMQ_MinIndex(A, f[i-1][j][x][y], f[i-1][j][x + (1<<(i-1))][y]);
-						rf = RMQ_MinIndex(A, a, b);
-					}
-				}
-			}
-		}
-	}
+    for (i = 0; i < MAXM; i++) {
+        for (j = 0; j < MAXM; ++j) {
+            for (x = 1; x + (1 << i) - 1 <= XLen; ++x) {
+                for (y = 1; y + (1 << j) - 1 <= YLen; ++y) {
+                    int &rf = f[i][j][x][y];
+
+                    if (i == 0 && j == 0) {
+                        rf = RMQ_Pack(x, y);
+                    }
+                    else if (i == 0) {
+                        rf = RMQ_MinIndex(A, f[i][j - 1][x][y], f[i][j - 1][x][y + (1 << (j - 1))]);
+                    }
+                    else if (j == 0) {
+                        rf = RMQ_MinIndex(A, f[i - 1][j][x][y], f[i - 1][j][x + (1 << (i - 1))][y]);
+                    }
+                    else {
+                        int a = RMQ_MinIndex(A,
+                            f[i - 1][j - 1][x][y],
+                            f[i - 1][j - 1][x + (1 << (i - 1))][y + (1 << (j - 1))]);
+                        int b = RMQ_MinIndex(A,
+                            f[i - 1][j - 1][x][y + (1 << (j - 1))],
+                            f[i - 1][j - 1][x + (1 << (i - 1))][y]);
+                        rf = RMQ_MinIndex(A, a, b);
+                    }
+                }
+            }
+        }
+    }
 }
 
 // (lx, ly) ×óÉÏ½Ç
