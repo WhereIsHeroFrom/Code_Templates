@@ -1,3 +1,5 @@
+
+
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -9,11 +11,11 @@ typedef int TrieData;
 typedef int AnsType;                         // 修改点 1
 typedef int ValueType;                       // 修改点 2
 const int MAXBIT = 32;                       // 修改点 3
-const int NODECACHES = MAXBIT * 100010;      // 修改点 4
-const int TREENODE = 2;                      // 修改点 5
-const int TRIEHASH_BASE = 0;                 // 修改点 6
-const int TRIEDATA_INIT = 0;                 // 修改点 7
-const int TRIENODE_NULL = -1;
+
+const int TRIE_NODE_CACHES = MAXBIT * 100010;
+const int TRIE_NODE_COUNT = 2;
+const int TRIE_DATA_INIT = 0;
+const int TRIE_NODE_NULL = -1;
 
 #define samebit(i) ((v & ((ValueType)1 << i)) ? 1 : 0)
 #define diffbit(i) ((v & ((ValueType)1 << i)) ? 0 : 1)
@@ -22,54 +24,60 @@ const int TRIENODE_NULL = -1;
 // 字典树结点类
 class TrieNode {
 private:
-    TrieData data_;
-    // 注意这里存的是结点内存池的下标，相比存指针的好处是：字节数少一半
-    int nodes_[TREENODE];
+    bool isword_;                 // 是否是1个完整单词
+    int num_;                     // 有多少个单次经过这个结点
+    TrieData td_;                 // 每个结点的权值，用来作一些特殊用途
+    int nodes_[TRIE_NODE_COUNT];  // 注意这里存的是结点内存池的下标，相比存指针的好处是：字节数少一半
 
 public:
-    // 模板中不变的接口
-    inline void setSon(int sonIdx, int son) {
-        nodes_[sonIdx] = son;
+    inline void setNode(int nodeIdx, int node) {
+        nodes_[nodeIdx] = node;
     }
-    inline int getSon(int sonIdx) {
-        return nodes_[sonIdx];
+    inline int getNode(int nodeIdx) {
+        return nodes_[nodeIdx];
     }
-    inline bool hasSon(int sonIdx) {
+    inline bool hasNode(int nodeIdx) {
         // 结点范围判断
-        if (sonIdx < 0 || sonIdx >= TREENODE) {
+        if (nodeIdx < 0 || nodeIdx >= TRIE_NODE_COUNT) {
             return false;
         }
-        return nodes_[sonIdx] != TRIENODE_NULL;
+        return nodes_[nodeIdx] != TRIE_NODE_NULL;
     }
     inline void reset() {
         resetData();
-        memset(nodes_, TRIENODE_NULL, sizeof(nodes_));
+        memset(nodes_, TRIE_NODE_NULL, sizeof(nodes_));
     }
-
-public:
-    // 模板中根据不同的题型进行稍适修改        // 修改点 7
-    void resetData();
-    void updateData(TrieData d);
-    TrieData getData();
+    inline void resetData(){
+        num_ = 0;
+        isword_ = false;
+        td_ = TRIE_DATA_INIT;
+    }
+    inline void addNum(int d) {
+        num_ += d;
+    }
+    inline int  getNum() {
+        return num_;
+    }
+    inline void setTrieData(TrieData v){
+        if (td_ == TRIE_DATA_INIT)
+            td_ = v;
+    }
+    inline TrieData  getTrieData() {
+        return td_;
+    }
+    inline void setWord(bool isw) {
+        isword_ = isw;
+    }
+    inline bool isWord(){
+        return isword_;
+    }
 };
 
-void TrieNode::resetData() {
-    data_ = TRIEDATA_INIT;
-}
-
-
-void TrieNode::updateData(TrieData d) {
-    data_ += d;
-}
-
-TrieData TrieNode::getData() {
-    return data_;
-}
 
 // 字典树类
 class TrieTree {
 public:
-    TrieTree(int nodeCacheCount);
+    TrieTree(int nodeCacheCount = TRIE_NODE_CACHES);
     virtual ~TrieTree();
     void initialize() {
         nodeId_ = 0;
@@ -95,19 +103,19 @@ private:
         return nodeId_++;
     }
 
-    bool hasSon(TrieNode *pkNow, int sonIdx) {
-        if (pkNow->hasSon(sonIdx)) {
-            TrieNode *pkSon = node(pkNow->getSon(sonIdx));
-            if (pkSon->getData() != TRIEDATA_INIT) {
+    bool hasNode(TrieNode *pkNow, int nodeIdx) {
+        if (pkNow->hasNode(nodeIdx)) {
+            TrieNode *pkNode = node(pkNow->getNode(nodeIdx));
+            if (pkNode->getNum() > 0) {
                 return true;
             }
         }
         return false;
     }
 
-    void addSon(TrieNode *pkNow, int sonIdx) {
-        if (!pkNow->hasSon(sonIdx)) {
-            pkNow->setSon(sonIdx, genNode());
+    void checkNode(TrieNode *pkNow, int nodeIdx) {
+        if (!pkNow->hasNode(nodeIdx)) {
+            pkNow->setNode(nodeIdx, genNode());
         }
     }
 private:
@@ -130,10 +138,10 @@ TrieTree::~TrieTree() {
 void TrieTree::insert_value(ValueType v) {
     TrieNode *pkNow = root();
     for (int i = MAXBIT - 1; i >= 0; --i) {
-        int sonIdx = samebit(i);
-        addSon(pkNow, sonIdx);
-        pkNow = node(pkNow->getSon(sonIdx));
-        pkNow->updateData(1);
+        int nodeIdx = samebit(i);
+        checkNode(pkNow, nodeIdx);
+        pkNow = node(pkNow->getNode(nodeIdx));
+        pkNow->addNum(1);
     }
 }
 
@@ -141,26 +149,26 @@ void TrieTree::insert_value(ValueType v) {
 TrieData TrieTree::query_value(ValueType v) {
     TrieNode *pkNow = root();
     for (int i = MAXBIT - 1; i >= 0; --i) {
-        int sonIdx = samebit(i);
-        if (!hasSon(pkNow, sonIdx)) {
-            return TRIEDATA_INIT;
+        int nodeIdx = samebit(i);
+        if (!hasNode(pkNow, nodeIdx)) {
+            return 0;
         }
-        pkNow = node(pkNow->getSon(sonIdx));
+        pkNow = node(pkNow->getNode(nodeIdx));
     }
-    return pkNow->getData();
+    return pkNow->getNum();
 }
 
 // 从最高位开始插入 删除 01字典树 中 v 数字一次 
 void TrieTree::delete_value(ValueType v) {
-    TrieData nCnt = query_value(v);
-    if (nCnt == TRIEDATA_INIT) {
+    TrieData cnt = query_value(v);
+    if (cnt == 0) {
         return;
     }
     TrieNode *pkNow = root();
     for (int i = MAXBIT - 1; i >= 0; --i) {
-        int sonIdx = samebit(i);
-        pkNow = node(pkNow->getSon(sonIdx));
-        pkNow->updateData(-1);
+        int nodeIdx = samebit(i);
+        pkNow = node(pkNow->getNode(nodeIdx));
+        pkNow->addNum(-1);
     }
 }
 
@@ -170,13 +178,13 @@ void TrieTree::query_xor_max(ValueType v, AnsType &ans) {
     TrieNode *pkNow = root();
     ans = 0;
     for (int i = MAXBIT - 1; i >= 0; --i) {
-        int sonIdx = diffbit(i);
-        if (hasSon(pkNow, sonIdx)) {
+        int nodeIdx = diffbit(i);
+        if (hasNode(pkNow, nodeIdx)) {
             ans |= ((ValueType)1 << i);
         }
         else {
-            sonIdx = 1 - sonIdx;
+            nodeIdx = 1 - nodeIdx;
         }
-        pkNow = node(pkNow->getSon(sonIdx));
+        pkNow = node(pkNow->getNode(nodeIdx));
     }
 }
