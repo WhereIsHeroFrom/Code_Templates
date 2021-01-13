@@ -35,3 +35,31 @@ bool scan_d(T &ret){
 	ret*=sgn;
 	return 1;
 }
+
+
+
+// 这个是最快的
+
+#define MAXN 100100
+int a[MAXN];
+char line[3000010];
+
+void get() {
+    int idx = 0, t = 0, s = 0;
+    getchar();
+    gets(line);
+
+    while (line[idx]) {
+        if (line[idx] >= '0' && line[idx] <= '9') {
+            s = s * 10 + line[idx] - '0';
+        }
+        else {
+            a[t++] = s;
+            s = 0;
+        }
+        ++idx;
+    }
+    if (s) {
+        a[t++] = s;
+    }
+}
