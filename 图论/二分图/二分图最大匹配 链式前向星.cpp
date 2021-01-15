@@ -10,8 +10,8 @@ using namespace std;
 
 //****** 二分图最大匹配模板(链式前向星) ******
 
-const int VMAX = 2510;
-const int EMAX = 2510 * 24;
+const int VMAX = 2010;
+const int EMAX = 4000010;
 
 struct Edge {
     int to, next;
