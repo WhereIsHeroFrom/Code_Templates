@@ -80,15 +80,11 @@ int BipartiteGraph::max(int a, int b)
 }
 
 bool BipartiteGraph::findMatch(int u) {
-    // u -> v
-    if (u == -1) {
-        return true;
-    }
     for (int e = head_[u]; ~e; e = edges_[e].next) {
         int v = edges_[e].to;
         if (!isVisited(v)) {
             setVisit(v);
-            if (findMatch(pre_[v])) {
+            if (pre_[v] == -1 || findMatch(pre_[v])) {
                 pre_[v] = u;
                 return true;
             }
@@ -188,7 +184,7 @@ int BipartiteGraph::getMaxMatch() {
     dye();
     int cnt = 0;
     memset(pre_, -1, sizeof(pre_));
-    for (int i = 0; i <= vertexcount_; ++i) {
+    for (int i = 1; i <= vertexcount_; ++i) {
         if (color_[i] == 0) {
             ++visittag_;
             if (findMatch(i)) {
