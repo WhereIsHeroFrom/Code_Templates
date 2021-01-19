@@ -5,7 +5,7 @@
 
 using namespace std;
 
-const unsigned int MAXDIGITS = 1002;        // 大数的位数，即 10^MAXDIGITS
+const unsigned int MAXDIGITS = 1110002;        // 大数的位数，即 10^MAXDIGITS
 const unsigned int MAXN = 9999;             // 每个a[i]表示的最大数字  
 const unsigned int DLEN = 4;                // MAXN的最大位数 
 
