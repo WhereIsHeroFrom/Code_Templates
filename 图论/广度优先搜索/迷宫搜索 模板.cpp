@@ -1,11 +1,13 @@
 #include <iostream>
 #include <queue>
 #include <cstring>
+#include <cmath>
 using namespace std;
 
 //************ 迷宫类 广度优先搜索 模板 ************
-const int MAXQUEUE = 1000000;                         // 采用循环队列，所以可以不用很大
-const int MAXN = 110;                                 // 地图的大小
+const int MAXQUEUE = 100000;                          // 采用循环队列，所以可以不用很大
+const int MAXSTATE = 160100;                          // 最大状态数
+const int MAXN = 20;                                  // 地图的大小
 const int DIR_COUNT = 4;                              // 方向数
 const int inf = -1;
 
@@ -32,19 +34,39 @@ int getDirIndex(int dx, int dy) {
     return -1;
 }
 
-int optDir[] = {
+int opposite[] = {
     2, 3, 0, 1
 };
 
 // 广搜的地图，作为全局变量存储
-char Map[MAXN][MAXN];
+char Map[MAXN + 1][MAXN + 1];
+const char MAP_BLOCK = 'X';
+
+struct Pos {
+    int x, y;
+    Pos() : x(0), y(0){}
+    Pos(int _x, int _y) : x(_x), y(_y) {}
+
+    bool isValid(int row, int col) {
+        if (x < 0 || y < 0 || x >= row || y >= col) {
+            return false;
+        }
+        if (Map[x][y] == MAP_BLOCK) {
+            return false;
+        }
+        return true;
+    }
+    Pos move(int dirIndex) const {
+        return Pos(x + dir[dirIndex][0], y + dir[dirIndex][1]);
+    }
+};
 
 // 广搜时塞入队列的状态结点
 struct BFSState {
-    int x, y;                              // 1. 一般迷宫问题都会有的位置字段
+    Pos p[2];                               // 1. 一般迷宫问题都会有的位置字段
 
 protected:
-    int getStateKey() const;                // 1. 所有关键字打包出一个哈希值进行哈希映射
+    int getStateKey() const;                // 2. 所有关键字打包出一个哈希值进行哈希映射
 
 public:
 
@@ -56,45 +78,47 @@ public:
     inline bool operator==(const BFSState & o);    // 6. 用来判断两个状态是否相等
 
 public:
-    static int step[MAXN][MAXN];                  //  标记状态对应的步数
+    static int step[MAXSTATE];                  //  标记状态对应的步数
 };
 
+typedef BFSState QueueData;
 
-class BFSQueue {
+// 循环队列模板
+class Queue {
 public:
-    BFSQueue();
-    virtual ~BFSQueue();
+    Queue();
+    virtual ~Queue();
 
     void clear();
-    bool empty();
-    void push(const BFSState& bs);
-    BFSState& pop();
+    bool empty() const;
+    void push(const QueueData& bs);
+    QueueData& pop();
 private:
-    BFSState *data_;
+    QueueData *data_;
     int front_, rear_;
 };
 
-BFSQueue::BFSQueue() : data_(NULL) {
-    data_ = new BFSState[MAXQUEUE];
+Queue::Queue() : data_(NULL) {
+    data_ = new QueueData[MAXQUEUE];
 }
 
-BFSQueue::~BFSQueue() {
+Queue::~Queue() {
     if (data_) {
         delete[] data_;
         data_ = NULL;
     }
 }
 
-void BFSQueue::clear() {
+void Queue::clear() {
     front_ = rear_ = 0;
 }
 
-void BFSQueue::push(const BFSState& bs) {
+void Queue::push(const QueueData& bs) {
     data_[rear_++] = bs;
     if (rear_ == MAXQUEUE) rear_ = 0;
 }
 
-BFSState& BFSQueue::pop(){
+QueueData& Queue::pop(){
     if (++front_ == MAXQUEUE) front_ = 0;
     if (front_ == 0)
         return data_[MAXQUEUE - 1];
@@ -102,7 +126,7 @@ BFSState& BFSQueue::pop(){
         return data_[front_ - 1];
 }
 
-bool BFSQueue::empty() {
+bool Queue::empty() const{
     return front_ == rear_;
 }
 
@@ -113,64 +137,18 @@ public:
     void bfs_initialize(BFSState startState);
     int  bfs(BFSState startState);
 private:
-    BFSQueue queue_;
-    int uselen_;
+    Queue queue_;
 };
 
-
-int BFSState::getStateKey() const {
-    // y        : 11111
-    // x        : 11111
-    return x << 5 | y;
-}
-
-bool BFSState::isValidState(int row, int col) {
-    if (x < 0 || y < 0 || x >= row || y >= col) {
-        return false;
-    }
-    if (Map[x][y]) {
-        return false;
-    }
-    return true;
-}
-
-bool BFSState::isFinalState() {
-    return true;
-}
-
 int BFSState::getStep() const {
-    return step[x][y];
+    return step[getStateKey()];
 }
 
 void BFSState::setStep(int sp) {
-    step[x][y] = sp;
+    step[getStateKey()] = sp;
 }
 
-void BFSState::print() const {
-    printf("%d %d\n", x, y);
-}
-
-int BFSState::step[MAXN][MAXN];
-int n, m;
-
-void BFSGraph::bfs_extendstate(const BFSState& fromState) {
-    int stp = fromState.getStep() + 1;
-    BFSState to;
-
-    for (int i = 0; i < DIR_COUNT; ++i) {
-        to.x = fromState.x + dir[i][0];
-        to.y = fromState.y + dir[i][1];
-
-        if (!to.isValidState(n, m)) {
-            continue;
-        }
-
-        if (to.getStep() == inf) {
-            to.setStep(stp);
-            queue_.push(to);
-        }
-    }
-}
+int BFSState::step[MAXSTATE];
 
 void BFSGraph::bfs_initialize(BFSState startState) {
     memset(BFSState::step, -1, sizeof(BFSState::step));
@@ -193,4 +171,82 @@ int BFSGraph::bfs(BFSState startState) {
 
 //************ 迷宫类 广度优先搜索 模板 ************
 
+
+
+//************ 迷宫类 广度优先搜索  需要修改的内容 ************
+int pos2State[MAXN][MAXN][MAXN][MAXN];
+int n, m;
+
+void BFSState::print() const {
+}
+
+int BFSState::getStateKey() const {
+    return pos2State[p[0].x][p[0].y][p[1].x][p[1].y];
+}
+
+bool BFSState::isValidState(int row, int col) {
+    return p[0].isValid(row, col) && p[1].isValid(row, col);
+}
+
+bool BFSState::isFinalState() {
+    return abs(p[0].x - p[1].x) + abs(p[0].y - p[1].y) <= 1;
+}
+
+void BFSGraph::bfs_extendstate(const BFSState& fromState) {
+    int stp = fromState.getStep() + 1;
+    BFSState to;
+    for (int i = 0; i < DIR_COUNT; ++i) {
+        to.p[0] = fromState.p[0].move(i);
+        to.p[1] = fromState.p[1].move(opposite[i]);
+        if (to.p[0].isValid(n, m)) {
+            if (!to.p[1].isValid(n, m)) {
+                to.p[1] = fromState.p[1];
+            }
+            if (to.getStep() == inf) {
+                to.setStep(stp);
+                queue_.push(to);
+            }
+        }
+    }
+}
+
+//************ 迷宫类 广度优先搜索 需要修改的内容 ************ 
+
+
+
 BFSGraph bfs;
+
+int main() {
+    int stateId = 0;
+    for (int i = 0; i < 20; ++i) {
+        for (int j = 0; j < 20; j++) {
+            for (int k = 0; k < 20; ++k) {
+                for (int l = 0; l < 20; ++l) {
+                    pos2State[i][j][k][l] = stateId++;
+                }
+            }
+        }
+    }
+
+    while (scanf("%d %d", &n, &m) != EOF) {
+        BFSState start;
+        for (int i = 0; i < n; ++i) {
+            scanf("%s", Map[i]);
+            for (int j = 0; j < m; ++j) {
+                if (Map[i][j] == 'Z') {
+                    start.p[0].x = i;
+                    start.p[0].y = j;
+                }
+                else if (Map[i][j] == 'S') {
+                    start.p[1].x = i;
+                    start.p[1].y = j;
+                }
+            }
+        }
+        int ans = bfs.bfs(start);
+        if (ans == inf) printf("Bad Luck!\n");
+        else printf("%d\n", ans);
+    }
+
+    return 0;
+}
