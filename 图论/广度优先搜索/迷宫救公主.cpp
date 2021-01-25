@@ -2,28 +2,27 @@
 #include <queue>
 #include <cstring>
 #include <cmath>
+#include <windows.h>
 using namespace std;
 
 //************ 迷宫类 广度优先搜索 模板 ************
 const int MAXQUEUE = 1000000;                          // 采用循环队列，所以可以不用很大
 const int MAXSTATE = 1000100;                          // 最大状态数
-const int MAXN = 10;                                   // 地图的大小
-const int DIR_COUNT = 6;                               // 方向数
+const int MAXN = 20;                                   // 地图的大小
+const int DIR_COUNT = 4;                               // 方向数
 const int inf = -1;
 
 // 广搜的地图，作为全局变量存储
 int XMAX, YMAX, ZMAX;
-char Map[MAXN + 1][MAXN + 1][MAXN + 1];
-int pos2State[ MAXN ][ MAXN ][ MAXN ];
+char Map[MAXN + 1][MAXN + 1];
+int pos2State[ MAXN ][ MAXN ];
 const char MAP_BLOCK = 'X'; 
 
 void initPos2State() {
     int stateId = 0;
     for (int i = 0; i < MAXN; ++i) {
         for (int j = 0; j < MAXN; ++j) {
-            for (int k = 0; k < MAXN; ++k) {
-                pos2State[i][j][k] = stateId++;
-            }
+            pos2State[i][j] = stateId++;
         }
     }
 }
@@ -61,36 +60,34 @@ int opposite[] = {
  三维
 */
 
-const int dir[DIR_COUNT][3] = {
-    { 0, 0, 1 },
-    { 0, 0, -1 },
-    { 0, 1, 0 },
-    { 0, -1, 0 },
-    { 1, 0, 0 },
-    { -1, 0, 0 }
+const int dir[DIR_COUNT][2] = {
+    { 1, 0 },
+    { 0, 1 },
+    { 0, -1 },
+    { -1, 0 }
 };
 
 
 
 
 struct Pos {
-    int x, y, z;
-    Pos() : x(0), y(0), z(0){}
-    Pos(int _x, int _y, int _z) : x(_x), y(_y), z(_z) {}
+    int x, y;
+    Pos() : x(0), y(0){}
+    Pos(int _x, int _y) : x(_x), y(_y) {}
     
     bool isInBound() {
-        return !(x < 0 || y < 0 || z < 0 || x >= XMAX || y >= YMAX || z >= ZMAX);
+        return !(x < 0 || y < 0 || x >= XMAX || y >= YMAX);
     }
     bool isObstacle() {
-        return (Map[x][y][z] == MAP_BLOCK);
+        return (Map[x][y] == MAP_BLOCK);
     }
 
     bool operator == (const Pos & o) const {
-        return x == o.x && y == o.y && z == o.z;
+        return x == o.x && y == o.y;
     }
 
     Pos move(int dirIndex) const {
-        return Pos(x + dir[dirIndex][0], y + dir[dirIndex][1], z + dir[dirIndex][2]);
+        return Pos(x + dir[dirIndex][0], y + dir[dirIndex][1]);
     }
 };
 
@@ -210,7 +207,7 @@ void BFSState::print() const {
 }
 
 int BFSState::getStateKey() const {
-    return pos2State[p.x][p.y][p.z];
+    return pos2State[p.x][p.y];
 }
 
 bool BFSState::isValidState() {
@@ -220,6 +217,37 @@ bool BFSState::isValidState() {
 BFSState finalState;
 bool BFSState::isFinalState() {
     return p == finalState.p;
+}
+
+void output() {
+    Sleep(70);
+    system("cls");
+    for (int i = 0; i < XMAX; ++i) {
+        for (int j = 0; j < YMAX; ++j) {
+            if (Map[i][j] == '.') {
+                BFSState s;
+                s.p = Pos(i, j);
+                if (s.getStep() == inf) {
+                    printf("  ");
+                }
+                else {
+                    printf("♂");
+                }
+            }
+            else {
+                if (Map[i][j] == 'X') {
+                    printf("■");
+                }
+                else if (Map[i][j] == 'y') {
+                    printf("♂");
+                }
+                else if (Map[i][j] == 'o') {
+                    printf("♀");
+                }
+            }
+        }
+        puts("");
+    }
 }
 
 void BFSGraph::bfs_extendstate(const BFSState& fromState) {
@@ -235,6 +263,7 @@ void BFSGraph::bfs_extendstate(const BFSState& fromState) {
         }
         toState.setStep(stp);
         queue_.push(toState);
+        output();
     }
 }
 
@@ -246,29 +275,41 @@ BFSGraph bfs;
 char str[100];
 
 int main() {
-    int MAX;
     initPos2State();
-    while (scanf("%s %d", str, &MAX) != EOF) {
-        XMAX = YMAX = ZMAX = MAX;
+    while (scanf("%d %d", &XMAX, &YMAX) != EOF) {
+        BFSState startState;
+        for (int x = 0; x < XMAX; ++x) {
+            scanf("%s", Map[x]);
+            for (int y = 0; y < YMAX; ++y) {
+                if (Map[x][y] == 'y') {
+                    startState.p = Pos(x, y);
+                }
+                else if (Map[x][y] == 'o') {
+                    finalState.p = Pos(x, y);
+                }
 
-        for (int x = 0; x < MAX; ++x) {
-            for (int y = 0; y < MAX; ++y) {
-                scanf("%s", Map[x][y]);
             }
         }
-        BFSState initState;
-        int x, y, z;
-        scanf("%d %d %d", &z, &y, &x);
-        initState.p = Pos(x, y, z);
-        scanf("%d %d %d", &z, &y, &x);
-        finalState.p = Pos(x, y, z);
-        scanf("%s", str);
+        Sleep(2000);
+        bfs.bfs(startState);
 
-
-        int ans = bfs.bfs(initState);
-        if (ans == inf) printf("NO ROUTE\n");
-        else printf("%d %d\n", MAX, ans);
     }
-
     return 0;
 }
+
+/*
+13 11 
+XXXXXXXXXXX
+X....y....X
+X.X.X.X.X.X
+XXX.XXX.XXX
+X...XoX...X
+X.XXX.XXX.X
+X...X.X...X
+XXX.X.X.XXX
+X..XX.X...X
+X.....X.X.X
+X.XXXXX.X.X
+X.......X.X
+XXXXXXXXXXX
+*/
