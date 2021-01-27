@@ -263,12 +263,12 @@ double Polygon::area() {
 void Polygon::getConvex(Polygon &c) {
     sort(p, p + n);
     c.n = n;
-	if(n <= 2) {
-		for(int i = 0; i < n; ++i) {
-			c.p[i] = p[i];
-		}
-		return ;
-	}
+    for (int i = 0; i < n; ++i) {
+        c.p[i] = p[i];
+    }
+    if (n <= 2) {
+        return;
+    }
         
 	int &top = c.n;
     top = 1;
