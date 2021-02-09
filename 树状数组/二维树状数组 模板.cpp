@@ -18,7 +18,7 @@ void clear() {
     memset(c, 0, sizeof(c));
 }
 
-void add(int x, int xmax, int y, int ymax, int v) {
+void add(int x, int y, int v, int xmax, int ymax) {
     while (x <= xmax) {
         int ty = y;
         while (ty <= ymax) {
