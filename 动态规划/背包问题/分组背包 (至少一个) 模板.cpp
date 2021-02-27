@@ -57,6 +57,10 @@ ValueType opt(ValueType x, ValueType y) {
     return x > y ? x : y;
 }
 
+ValueType opt(ValueType x, ValueType y, ValueType z) {
+    return opt(opt(x, y), z);
+}
+
 void groupKnapsackInit(int maxCapacity) {
     for (int i = 0; i <= maxCapacity; ++i) {
         dp[0][i] = (!i) ? init : inf;
@@ -78,26 +82,25 @@ int groupKnapsackRegroup(int knapsackSize, Knapsack *knap) {
 // 注意：
 // 1）返回组数，用于和原组数作判断用
 // 2）容量有可能为0，注意状态转移顺序：先计算当前组、再计算上一组
-int groupKnapsack(int knapsackSize, Knapsack *knap, int maxCapacity) {
-    groupKnapsackInit(maxCapacity);
-    int groupSize = groupKnapsackRegroup(knapsackSize, knap);
-    for (int k = 1; k <= groupSize; ++k) {
-        for (int j = 0; j <= maxCapacity; ++j) {
+int groupKnapsack(int knapSize, Knapsack *knap, int m) {
+    groupKnapsackInit(m);
+    int t = groupKnapsackRegroup(knapSize, knap);
+    for (int k = 1; k <= t; ++k) {
+        for (int j = 0; j <= m; ++j) {
             dp[k][j] = inf;
         }
-        for (int i = 0, s = GKnap[k-1].size(); i < s; ++i) {
-            const Knapsack &item = GKnap[k-1].get(i);
-            for (int j = maxCapacity; j >= item.capacity; --j) {
-                // 三种选择：
-                // 1) 从当前组状态过来，则这个物品可以不选：dp[i + 1][j]
-                // 2）从当前组状态过来，则这个物品可以选：dp[i + 1][j - item.capacity] + item.weight)
-                // 3）从上一组状态过来，则这个物品必须选：dp[i][j - item.capacity] + item.weight
-                dp[k][j] = opt(dp[k][j], dp[k][j - item.capacity] + item.weight);
-                dp[k][j] = opt(dp[k][j], dp[k-1][j - item.capacity] + item.weight);
+        for (int i = 0, s = GKnap[k - 1].size(); i < s; ++i) {
+            const Knapsack &item = GKnap[k - 1].get(i);
+            for (int j = m; j >= item.capacity; --j) {
+                dp[k][j] = opt(
+                    dp[k][j],
+                    dp[k][j - item.capacity] + item.weight,
+                    dp[k - 1][j - item.capacity] + item.weight
+                    );
             }
         }
     }
-    return groupSize;
+    return t;
 }
 
 //************************************ 分组背包 模板 ************************************
