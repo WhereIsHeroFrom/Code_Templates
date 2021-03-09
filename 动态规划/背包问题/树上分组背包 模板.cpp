@@ -42,7 +42,7 @@ void treeGroupKnapsack(int father, int u, int m) {
         if (v == father) continue;                     // 4、无向树的处理
         treeGroupKnapsack(u, v, maxCapacity);          // 5、递归求解子结点所有组的状态 dp[v][0 ... capacity]
         for (i = maxCapacity; i >= 0; --i) {           // 6、分组背包逆序枚举容量
-            for (j = 0; j <= i; ++j) {                 // 7、(容量为k, 价值为dp[v][k]) 的物品进行决策
+            for (j = 0; j <= i; ++j) {                 // 7、(容量为k, 价值为dp[v][k]) 的物品进行决策，注意 j 为 0，dp[v][j]不为0的情况
                 dp[u][i] = opt(
                     dp[u][i],
                     dp[u][i - j] + dp[v][j]);
