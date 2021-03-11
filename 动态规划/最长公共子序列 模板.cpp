@@ -5,22 +5,22 @@ using namespace std;
 
 typedef char ValueType;
 const int maxn = 2010;
-int dp[maxn][maxn];
+int f[maxn][maxn];
 
 int getLCS(int hsize, ValueType *h, int vsize, ValueType *v) {
-    memset(dp, 0, sizeof(dp));
-    dp[0][0] = 0;
+    memset(f, 0, sizeof(f));
+    f[0][0] = 0;
     for (int i = 1; i <= vsize; ++i) {
         for (int j = 1; j <= hsize; ++j) {
             if (v[i] == h[j]) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
+                f[i][j] = f[i - 1][j - 1] + 1;
             }
             else {
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                f[i][j] = max(f[i - 1][j], f[i][j - 1]);
             }
         }
     }
-    return dp[vsize][hsize];
+    return f[vsize][hsize];
 }
 
 char s[2][maxn];
