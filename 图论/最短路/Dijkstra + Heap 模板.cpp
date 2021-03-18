@@ -32,6 +32,7 @@ struct Dist {
         return w > d.w;
     }
 };
+typedef priority_queue <Dist> Heap;
 
 int head[maxn], edgeCount;
 ValueType dist[maxn];
@@ -47,29 +48,39 @@ void addEdge(int u, int v, ValueType w) {
     head[u] = edgeCount++;
 }
 
-void DijkstraHeap(int n, int st, ValueType *dist) {
+void Dijkstra_Init(int n, int st, Heap& heap, ValueType *dist) {
     for (int i = 0; i < n; ++i) {
         dist[i] = (st == i) ? 0 : inf;
         visited[i] = false;
     }
-    priority_queue <Dist> heap;
     heap.push(Dist(st, 0));
+}
 
-    while (!heap.empty()) {
-        Dist s = heap.top();
-        heap.pop();
-        int u = s.u;
-        ValueType dis = s.w;
-        if (visited[u]) continue;           // 访问过的不用重复更新
-        visited[u] = true;
-
-        // 利用 Dijkstra 更新其它点的最短路信息
-        for (int e = head[u]; ~e; e = edges[e].next) {
-            int v = edges[e].v;
-            dist[v] = min(dist[v], dis + edges[e].w);
-            if (dis + edges[e].w == dist[v])
-                heap.push(Dist(v, dist[v]));
-        }
+void Dijkstra_Update(int u, Heap& heap, ValueType *dist) {
+    if (visited[u]) {
+        return;
+    }
+    visited[u] = true;
+    for (int e = head[u]; ~e; e = edges[e].next) {
+        int v = edges[e].v;
+        int w = edges[e].w;
+        dist[v] = min(dist[v], (dist[u] + w));
+        if (dist[u] + w == dist[v])
+            heap.push(Dist(v, dist[v]));
     }
 }
 
+int Dijkstra_FindMin(Heap& heap) {
+    Dist s = heap.top();
+    heap.pop();
+    return s.u;
+}
+
+void DijkstraHeap(int n, int st, ValueType *dist) { // 1）
+    Heap heap;
+    Dijkstra_Init(n, st, heap, dist);               // 2）
+    while (!heap.empty()) {
+        int u = Dijkstra_FindMin(heap);             // 3）
+        Dijkstra_Update(u, heap, dist);             // 4）
+    }
+}

@@ -5,7 +5,7 @@
 using namespace std;
 
 typedef int ValueType;
-const int maxn = 1010;
+const int maxn = 100010;
 const int maxm = 2000010;
 const ValueType inf = 1e9;
 
@@ -33,6 +33,12 @@ void addEdge(int u, int v, ValueType w) {
     head[u] = edgeCount++;
 }
 
+void BellmanFordInit(int n) {
+    for (int i = 0; i < n; ++i) {
+        dist[i] = 0;
+    }
+}
+
 bool BellmanFordUpdate() {
     bool flag = false;
     for (int i = 0; i < edgeCount; ++i) {
@@ -47,9 +53,7 @@ bool BellmanFordUpdate() {
 
 // 判断是否存在负环
 bool BellmanFord(int n) {
-    for (int i = 0; i < n; ++i) {
-        dist[i] = 0;
-    }
+    BellmanFordInit(n);
     for (int i = 0; i < n - 1; ++i) {
         if (!BellmanFordUpdate()) {
             return false;

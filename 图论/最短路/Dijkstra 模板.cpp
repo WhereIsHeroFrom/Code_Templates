@@ -7,6 +7,7 @@ using namespace std;
 typedef int ValueType;
 const int maxn = 1010;
 const int maxm = 2000010;
+const int INVALID_INDEX = -1;
 const ValueType inf = 1e9;
 
 struct Edge {
@@ -33,38 +34,39 @@ void addEdge(int u, int v, ValueType w) {
     head[u] = edgeCount++;
 }
 
-// 顶点 0 ~ n-1
-// 起点 start
-// 终点 end
-ValueType Dijkstra(int n, int start, int end) {
+void Dijkstra_Init(int n, int st, ValueType *dist) {
     for (int i = 0; i < n; ++i) {
-        dist[i] = inf;
+        dist[i] = (st == i) ? 0 : inf;
+        visited[i] = false;
     }
-    memset(visited, false, sizeof(visited));
-    dist[start] = 0;
-    while (1) {
-        ValueType Min = inf;
-        int u;
-        for (int i = 0; i < n; ++i) {
-            if (visited[i]) {
-                continue;
-            }
-            if (dist[i] < Min) {
-                Min = dist[i];
-                u = i;
-            }
-        }
-        if (Min == inf) {
-            break;
-        }
-        visited[u] = true;
+}
 
-        for (int e = head[u]; ~e; e = edges[e].next) {
-            Edge& to = edges[e];
-            if (dist[u] + to.w < dist[to.v]) {
-                dist[to.v] = dist[u] + to.w;
-            }
+int Dijkstra_FindMin(int n, ValueType *dist) {
+    int u = INVALID_INDEX;
+    for (int i = 0; i < n; ++i) {
+        if (visited[i])
+            continue;
+        if (u == INVALID_INDEX || dist[i] < dist[u]) {
+            u = i;
         }
     }
-    return dist[end];
+    return u;
+}
+
+void Dijkstra_Update(int u, ValueType *dist) {
+    visited[u] = true;
+    for (int e = head[u]; ~e; e = edges[e].next) {
+        int v = edges[e].v;
+        int w = edges[e].w;
+        dist[v] = min( dist[v], (dist[u] + w) );
+    }
+}
+
+void Dijkstra(int n, int st, ValueType *dist) {
+    Dijkstra_Init(n, st, dist);
+    while (true) {
+        int u = Dijkstra_FindMin(n, dist);
+        if (u == INVALID_INDEX) break;
+        Dijkstra_Update(u, dist);
+    }
 }
