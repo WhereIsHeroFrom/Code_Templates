@@ -18,7 +18,7 @@ void init(int n) {
     }
 }
 
-void addEdge(int u, int v, int w) {
+void addEdge(int u, int v, ValueType w) {
     mat[u][v] = min(mat[u][v], w);
 }
 

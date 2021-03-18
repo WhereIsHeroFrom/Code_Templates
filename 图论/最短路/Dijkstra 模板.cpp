@@ -59,7 +59,7 @@ ValueType Dijkstra(int n, int start, int end) {
         }
         visited[u] = true;
 
-        for (int e = head[u]; e != -1; e = edges[e].next) {
+        for (int e = head[u]; ~e; e = edges[e].next) {
             Edge& to = edges[e];
             if (dist[u] + to.w < dist[to.v]) {
                 dist[to.v] = dist[u] + to.w;

@@ -47,7 +47,7 @@ void addEdge(int u, int v, ValueType w) {
     head[u] = edgeCount++;
 }
 
-void DijkstraHeap(int n, int st, int *dist) {
+void DijkstraHeap(int n, int st, ValueType *dist) {
     for (int i = 0; i < n; ++i) {
         dist[i] = (st == i) ? 0 : inf;
         visited[i] = false;
@@ -65,11 +65,10 @@ void DijkstraHeap(int n, int st, int *dist) {
 
         // 利用 Dijkstra 更新其它点的最短路信息
         for (int e = head[u]; ~e; e = edges[e].next) {
-            Edge &nex = edges[e];
-            if (dis + nex.w < dist[nex.v]) {
-                dist[nex.v] = dis + nex.w;
-                heap.push(Dist(nex.v, dist[nex.v]));
-            }
+            int v = edges[e].v;
+            dist[v] = min(dist[v], dis + edges[e].w);
+            if (dis + edges[e].w == dist[v])
+                heap.push(Dist(v, dist[v]));
         }
     }
 }
