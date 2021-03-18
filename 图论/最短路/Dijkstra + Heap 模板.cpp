@@ -76,8 +76,8 @@ int Dijkstra_FindMin(Heap& heap) {
     return s.u;
 }
 
-void DijkstraHeap(int n, int st, ValueType *dist) { // 1£©
-    Heap heap;
+void DijkstraHeap(int n, int st, ValueType *dist) { 
+    Heap heap;                                      // 1£©
     Dijkstra_Init(n, st, heap, dist);               // 2£©
     while (!heap.empty()) {
         int u = Dijkstra_FindMin(heap);             // 3£©
