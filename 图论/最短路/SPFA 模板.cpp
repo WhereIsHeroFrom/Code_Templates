@@ -23,6 +23,7 @@ struct Edge {
 
 int head[maxn], edgeCount;
 int visited[maxn];
+bool inqueue[maxn];
 
 void init() {
     edgeCount = 0;
@@ -34,30 +35,40 @@ void addEdge(int u, int v, ValueType w) {
     head[u] = edgeCount++;
 }
 
-void SPFA(int n, int st, ValueType *dist) {
+void SPFAInit(int n, int st, queue <int>& que, ValueType *dist) {
     for (int i = 0; i < n; ++i) {
         dist[i] = (st == i) ? 0 : inf;
+        inqueue[i] = (st == i);
         visited[i] = 0;
     }
-    queue <int> que;
     que.push(st);
+}
 
-    while (!que.empty()) {
-        int u = que.front();
-        que.pop();
-        // 遇到负环了
-        if (visited[u] ++ > n) {
-            //break;
-        }
-
-        // 利用边来更新其它点的 最短路信息
-        for (int e = head[u]; ~e; e = edges[e].next) {
-            int v = edges[e].v;
-            if (dist[u] + edges[e].w < dist[v]) {
-                dist[v] = dist[u] + edges[e].w;
+void SPFAUpdate(int u, queue <int>& que, ValueType *dist) {
+    for (int e = head[u]; ~e; e = edges[e].next) {
+        int v = edges[e].v;
+        if (dist[u] + edges[e].w < dist[v]) {
+            dist[v] = dist[u] + edges[e].w;
+            if (!inqueue[v]) {
+                inqueue[v] = true;
                 que.push(v);
             }
         }
     }
 }
+
+void SPFA(int n, int st, ValueType *dist) {
+    queue <int> que;
+    SPFAInit(n, st, que, dist);
+    while (!que.empty()) {
+        int u = que.front();
+        que.pop();
+        inqueue[u] = false;
+        if (visited[u] ++ > n) {
+            break;
+        }
+        SPFAUpdate(u, que, dist);
+    }
+}
+
 
