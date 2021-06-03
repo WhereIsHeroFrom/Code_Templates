@@ -12,35 +12,30 @@ Algorithm Complexity: O(sqrt(n))
 #include <vector>
 using namespace std;
 
-#define MAXP 65540
-#define LL __int64
+const int maxn = 100005;
+#define ll long long
 
-int primes[MAXP];
-bool notprime[MAXP];
+int primes[maxn];
+bool notprime[maxn];
 
 struct factor {
 	int prime, count;
-	factor() {
-	} 
-	factor(int p, int c) {
-		prime = p;
-		count = c;
-	}
+	factor() :prime(0), count(0) {}
+	factor(int p, int c) : prime(p), count(c) {}
 	void print() {
 		printf("(%d, %d)\n", prime, count);
 	}
 };
-
 // 厄尔多塞素数筛选法 
 void Eratosthenes() {
 	memset(notprime, false, sizeof(notprime));
 	notprime[1] = true;
 	primes[0] = 0;
-	for(int i = 2; i < MAXP; i++) {
+	for(int i = 2; i < maxn; i++) {
 		if( !notprime[i] ) {
 			primes[ ++primes[0] ] = i;
 		    //需要注意i*i超出整型后变成负数的问题，所以转化成 __int64 
-			for(LL j = (LL)i*i; j < MAXP; j += i) {
+			for(ll j = (ll)i*i; j < maxn; j += i) {
 				notprime[j] = true;
 			}
 		}
