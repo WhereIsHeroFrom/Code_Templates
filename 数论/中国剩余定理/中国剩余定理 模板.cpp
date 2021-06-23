@@ -11,35 +11,31 @@ ll GCD(ll a, ll b) {
 }
 
 class ModPair {
-    /*
-        x = km + a
-    */
 private:
     ll m_;   // modulus
     ll a_;   // remainder
 public:
     ModPair() {}
     ModPair(ll m, ll a) : m_(m), a_(a) {}
-
-    // 标准化，将 m 和 a 都转化为正数
-    void standardization() {
-        if(m_ < 0) {
-            m_ = -m_;
-        }
-        a_ = (a_ % m_ + m_) % m_;
-    }
-
-    ll lcm (ll om) const {
-        ll g = GCD(om, m_);
-        return om / g * m_;
-    }
-
+    void standardization();
+    ll lcm (ll om) const;
     ll getModulus() const { return m_;}
     void setModulus(ll m) {m_ = m;}
     ll getRemainder() const { return a_;}
     void setRemainder(ll a) {a_ = a;} 
 };
 
+void ModPair::standardization() {
+    if(m_ < 0) {
+        m_ = -m_;
+    }
+    a_ = (a_ % m_ + m_) % m_;
+}
+ll ModPair::lcm (ll om) const {
+    ll g = GCD(om, m_);
+    return om / g * m_;
+}
+    
 
 // 扩展欧几里得
 // aX + bY = 1 
