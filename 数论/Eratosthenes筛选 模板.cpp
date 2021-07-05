@@ -10,8 +10,8 @@ Algorithm Complexity: O(n)
 #include <cstring>
 using namespace std;
 
-#define MAXP 65536
-#define LL __int64
+const int MAXP = 65536;
+#define ll long long
 
 int primes[MAXP];
 bool notprime[MAXP];
@@ -24,7 +24,7 @@ void Eratosthenes() {
 		if( !notprime[i] ) {
 			primes[ ++primes[0] ] = i;
 		    //需要注意i*i超出整型后变成负数的问题，所以转化成 __int64 
-			for(LL j = (LL)i*i; j < MAXP; j += i) {
+			for(ll j = (ll)i*i; j < MAXP; j += i) {
 				notprime[j] = true;
 			}
 		}
