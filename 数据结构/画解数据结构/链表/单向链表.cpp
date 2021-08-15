@@ -2,11 +2,6 @@
 #include <malloc.h>
 
 typedef int DataType;
-
-enum RetType {
-    RET_OK = 0,
-    RET_ERROR = 1,
-};
  
  // 链表结点 
 struct ListNode {
@@ -146,6 +141,15 @@ ListNode *ListCreateListByHead(int n, int *a) {
     return head;                       // (6) 返回链表头结点； 
 } 
 
+void ListDestroyList(ListNode **pHead) { // (1) 这里必须用二级指针，因为删除后需要将链表头置空，普通传参无法影响外部变量； 
+    ListNode *head = *pHead;             // (2) 给链表头解引用； 
+    while(head) {                        // (3) 如果链表非空，则继续循环； 
+        head = ListDeleteNode(head, 0);  // (4) 产出链表头部，并且返回 后继结点； 
+        ListPrint(head);
+    }
+    *pHead = NULL;                       // (5) 将链表头置空 
+}
+
 /*                     以下为测试用例                     */
 
 void testListGetNode(ListNode *head) {
@@ -179,24 +183,31 @@ void testListInsertNode(ListNode *head) {
 
 void testListDeleteNode(ListNode *head) {
     ListPrint(head);
-    printf("执行 2 号操作！\n"); 
+    printf("执行 2 号结点删除操作！\n"); 
     head = ListDeleteNode(head, 2);
     ListPrint(head);
 
-    printf("执行 0 号操作！\n"); 
+    printf("执行 0 号结点删除操作！\n"); 
     head = ListDeleteNode(head, 0);
     ListPrint(head);
+}
+
+void testListDestroyList(ListNode **head) {
+    ListPrint(*head);
+    ListDestroyList(head); 
+    ListPrint(*head);
 }
 
 int main() {    
     int a[5] = {1, 3, 8, 2, 6};
     ListNode *head = ListCreateListByHead(5, a);
-    testListDeleteNode(head);
+    testListDestroyList(&head); 
+    
+        int n = 1032, m = 045;
+        printf("%d", m+++n++);
+    
     return 0;
 }
-
-
-
 
 
 
