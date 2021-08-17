@@ -1,11 +1,9 @@
 #include <malloc.h>
 
 /**************************** 链表 实现队列 ****************************/
-#define DataType int
-#define maxn 100005
+typedef int DataType;
 
 struct QueueNode;
-
 struct QueueNode {
     DataType data;
     struct QueueNode *next;
@@ -30,10 +28,13 @@ void QueueEnqueue(struct Queue *que, DataType dt) {
 }
 
 void QueueDequeue(struct Queue* que) {
-    struct QueueNode *delNode = que->head;
-    que->head = delNode->next;
-    free(delNode);
+    struct QueueNode *temp = que->head;
+    que->head = temp->next;
+    free(temp);
     --que->size;
+    if(que->size == 0) {
+        que->tail = NULL;
+    } 
 }
 
 DataType QueueGetFront(struct Queue* que) {
