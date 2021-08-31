@@ -3,7 +3,7 @@
 #define mask (maxn-1)
 #define DataType int
 #define Boolean int
-#define NULLKEY (maxn+maxn)    /* 空槽标记不能用-1，会导致正常值也为-1的情况*/
+#define NULLKEY (1<<30)    /* 空槽标记不能用-1，会导致正常值也为-1的情况*/
 
 typedef struct {
     DataType data[maxn];
@@ -20,14 +20,6 @@ int HashGetAddr(DataType key) {
     return key & mask;        // 除留余数法
 }
 
-int HashInsert(HashTable *ht, DataType key) {
-    int addr = HashGetAddr(key);
-    while(ht->data[addr] != NULLKEY)
-        addr = HashGetAddr(addr + 1);
-    ht->data[addr] = key;
-    return addr;
-}
-
 Boolean HashSearchKey(HashTable *ht, DataType key, int *addr) {
     int startaddr = HashGetAddr(key);
     *addr = startaddr;
@@ -41,6 +33,27 @@ Boolean HashSearchKey(HashTable *ht, DataType key, int *addr) {
         }
     }
     return 1;
+}
+
+int HashInsert(HashTable *ht, DataType key) {
+    int addr = HashGetAddr(key);
+    int retaddr;
+    if ( HashSearchKey(ht, key, &retaddr ) ) {
+        return retaddr;
+    } 
+    while(ht->data[addr] != NULLKEY)
+        addr = HashGetAddr(addr + 1);
+    ht->data[addr] = key;
+    return addr;
+}
+
+int HashRemove(HashTable *ht, DataType key) {
+    int addr;
+    if ( !HashSearchKey(ht, key, &addr ) ) {
+        return NULLKEY;
+    } 
+    ht->data[addr] = NULLKEY;
+    return addr;
 }
 
 /******************** 哈希表 开放定址法 ********************/
