@@ -42,12 +42,16 @@ void _QueueEnqueue(struct Queue *que, DataType dt, int isFrontOrRear) {
 }
 
 void _QueueDequeue(struct Queue *que, struct QueueNode *node, int isFrontOrRear) {
-    if(isFrontOrRear) {
-        que->head = node->next;
-        que->head->prev = NULL;
+    if(que->size == 1) {
+        que->head = que->tail = NULL;
     }else {
-        que->tail = node->prev;
-        que->tail->next = NULL;
+        if(isFrontOrRear) {
+            que->head = node->next;
+            que->head->prev = NULL;
+        }else {
+            que->tail = node->prev;
+            que->tail->next = NULL;
+        }        
     }
     free(node);
     --que->size;
@@ -55,6 +59,7 @@ void _QueueDequeue(struct Queue *que, struct QueueNode *node, int isFrontOrRear)
 
 void QueueClear(struct Queue* que) {
     que->head = que->tail = NULL;
+    que->size = 0;
 }
 
 void QueueEnqueueFront(struct Queue *que, DataType dt) {
