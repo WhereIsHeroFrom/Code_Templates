@@ -17,43 +17,43 @@ struct Queue {
 };
 
 struct QueueNode *QueueCreateNode(DataType dt) {
-    struct QueueNode *p = (struct QueueNode *) malloc( sizeof(struct QueueNode));
-    p->data = dt;
-    p->next = p->prev = NULL;
-    return p;
+    struct QueueNode *vtx = (struct QueueNode *) malloc( sizeof(struct QueueNode));
+    vtx->data = dt;
+    vtx->next = vtx->prev = NULL;
+    return vtx;
 }
 
 void _QueueEnqueue(struct Queue *que, DataType dt, int isFrontOrRear) {
-    struct QueueNode *p = QueueCreateNode(dt);
+    struct QueueNode *vtx = QueueCreateNode(dt);
     if(que->size == 0) {
-        que->head = que->tail = p;
+        que->head = que->tail = vtx;
     }else {
         if(isFrontOrRear) {
-            p->next = que->head;
-            que->head->prev = p;
-            que->head = p;
+            vtx->next = que->head;
+            que->head->prev = vtx;
+            que->head = vtx;
         }else {
-            que->tail->next = p;
-            p->prev = que->tail;
-            que->tail = p;
+            que->tail->next = vtx;
+            vtx->prev = que->tail;
+            que->tail = vtx;
         }
     } 
     ++que->size;
 }
 
-void _QueueDequeue(struct Queue *que, struct QueueNode *node, int isFrontOrRear) {
+void _QueueDequeue(struct Queue *que, struct QueueNode *temp, int isFrontOrRear) {
     if(que->size == 1) {
         que->head = que->tail = NULL;
     }else {
         if(isFrontOrRear) {
-            que->head = node->next;
+            que->head = temp->next;
             que->head->prev = NULL;
         }else {
-            que->tail = node->prev;
+            que->tail = temp->prev;
             que->tail->next = NULL;
         }        
     }
-    free(node);
+    free(temp);
     --que->size;
 }
 

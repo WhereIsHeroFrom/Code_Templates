@@ -3,21 +3,15 @@
 #define maxn 100005
 
 struct Queue {
-    DataType data[maxn<<1];
+    DataType data[maxn];
     int head, tail;
 };
 
-/* head 和 tail 错开一个位置 */
 void QueueClear(struct Queue* que) {
-    que->head = maxn;
-    que->tail = que->head - 1;
+    que->head = que->tail = 0;
 }
-
-void QueueEnqueueFront(struct Queue *que, DataType dt) {
-    que->data[ --que->head ] = dt;
-}
-void QueueEnqueueRear(struct Queue *que, DataType dt) {
-    que->data[ ++que->tail ] = dt;
+void QueueEnqueue(struct Queue *que, DataType dt) {
+    que->data[ que->tail++ ] = dt;
 }
 void QueueDequeueFront(struct Queue* que) {
     ++que->head;
@@ -30,13 +24,14 @@ DataType QueueGetFront(struct Queue* que) {
     return que->data[ que->head ];
 }
 DataType QueueGetRear(struct Queue* que) {
-    return que->data[ que->tail ];
+    return que->data[ que->tail - 1 ];
 }
 int QueueGetSize(struct Queue* que) {
-    return que->tail - que->head + 1;
+    return que->tail - que->head;
 }
 int QueueIsEmpty(struct Queue* que) {
     return !QueueGetSize(que);
 }
 
 /**************************** 顺序表 实现双端队列 ****************************/
+
