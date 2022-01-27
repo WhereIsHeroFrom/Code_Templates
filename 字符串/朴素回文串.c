@@ -3,6 +3,7 @@ bool isPal[1010][1010];
 
 void preCalc(char *s) {
     int i, j;
+    int l, r;
     int len = strlen(s);
     for(i = 0; i < len; ++i) {
         // 奇数
