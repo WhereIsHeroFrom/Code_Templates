@@ -5,35 +5,21 @@
 #include <cstdlib>
 using namespace std;
 
-//************************* ¼ÆËã¼¸ºÎ Ä£°å *************************
-// °üº¬£º
-// 1¡¢Í¹°ü
-// 2¡¢Ïß¶ÎÅĞ½»
-// 3¡¢µãÔÚ¶à±ßĞÎÄÚ
-// 4¡¢¶à±ßĞÎ½»ÅĞ¶¨
-
-const int MAXP = 2010;
+const int MAXP = 100010;
 const double eps = 1e-10;
-#define NINT_POINT
-
-// Á½Ïß¶Î½»µãÀàĞÍ
-enum SegCrossType {
-    SCT_NONE = 0,
-    SCT_CROSS = 1,         // Õı³£Ïà½»
-    SCT_ENDPOINT_ON = 2,   // ÆäÖĞÒ»ÌõÏß¶ÎµÄ¶ËµãÔÚÁíÒ»ÌõÉÏ
-};
+#define INT_POINT
 
 #ifdef INT_POINT
 typedef int PointType;
-typedef long long BigPointType;    // ÓÉÓÚ³Ë·¨¿ÉÄÜµ¼ÖÂ int Òç³ö£¬ËùÒÔĞèÒª¶¨ÒåÒ»ÖÖ³Ë·¨ºóµÄÀàĞÍ(Æ½·½¡¢²æ³Ë¡¢µã³Ë)
+typedef long long MultiplyType;    // ç”±äºä¹˜æ³•å¯èƒ½å¯¼è‡´ int æº¢å‡ºï¼Œæ‰€ä»¥éœ€è¦å®šä¹‰ä¸€ç§ä¹˜æ³•åçš„ç±»å‹(å¹³æ–¹ã€å‰ä¹˜ã€ç‚¹ä¹˜)
 #else
 typedef double PointType;
-typedef double BigPointType;
+typedef double MultiplyType;            
 #endif
 typedef int PointIndex;
 
-// Ğ¡ÓÚ
-bool ST(BigPointType a, BigPointType b) {
+// å°äº
+bool ST(PointType a, PointType b) {
 #ifdef INT_POINT
     return a < b;
 #else
@@ -41,8 +27,8 @@ bool ST(BigPointType a, BigPointType b) {
 #endif
 }
 
-// µÈÓÚ
-bool EQ(BigPointType a, BigPointType b) {
+// ç­‰äº
+bool EQ(PointType a, PointType b) {
 #ifdef INT_POINT
     return a == b;
 #else
@@ -50,8 +36,8 @@ bool EQ(BigPointType a, BigPointType b) {
 #endif
 }
 
-// ´óÓÚ
-bool LT(BigPointType a, BigPointType b) {
+// å¤§äº
+bool LT(PointType a, PointType b) {
     return !ST(a, b) && !EQ(a, b);
 }
 
@@ -62,7 +48,7 @@ int TernaryFunc(double v) {
     return ST(v, 0) ? -1 : 1;
 }
 
-BigPointType SQR(BigPointType x) {
+MultiplyType SQR(MultiplyType x) {
     return x * x;
 }
 
@@ -74,30 +60,22 @@ public:
     bool zero() const;
     Point2D operator + (const Point2D& pt) const;
     Point2D operator - (const Point2D& pt) const;
-    BigPointType operator * (const Point2D& pt) const;
-    BigPointType cross(const Point2D& pt) const;
-    bool sameLine(const Point2D& l, const Point2D& r) const;
+    MultiplyType cross(const Point2D& pt) const;
     bool operator < (const Point2D& pt) const;
     bool operator == (const Point2D& pt) const;
+    
 
-
-    BigPointType distSquare(const Point2D& pt) const;
+    MultiplyType distSquare(const Point2D& pt) const;
     static bool angleCmp(const Point2D& a, const Point2D& b);
     void calculateAngle(const Point2D& o);
-
+    
     void read(int idx);
-    void print();
-    PointType x() const;
-    PointType y() const;
     double getAngle() const;
-    int getIndex() const;
-
-    Point2D getMinusYPoint() const;
 private:
     PointType x_, y_;
-    double angle_;            // Ïà¶ÔÓÚ×óÏÂ½ÇµãµÄ¼«½Ç
-    double distSqr_;          // Ïà¶ÔÓÚ×óÏÂ½ÇµãµÄ¾àÀëÆ½·½
-    int index_;               // ÔÚÔ­Êı×éµÄÏÂ±ê£¬·½±ãË÷ÒıÓÃ
+    double angle_;            // ç›¸å¯¹äºå·¦ä¸‹è§’ç‚¹çš„æè§’
+    double distSqr_;          // ç›¸å¯¹äºå·¦ä¸‹è§’ç‚¹çš„è·ç¦»å¹³æ–¹
+    int index_;               // åœ¨åŸæ•°ç»„çš„ä¸‹æ ‡ï¼Œæ–¹ä¾¿ç´¢å¼•ç”¨
 };
 typedef Point2D Vector2D;
 
@@ -113,61 +91,44 @@ Point2D Point2D::operator - (const Point2D& pt) const {
     return Point2D(x_ - pt.x_, y_ - pt.y_);
 }
 
-BigPointType Point2D::operator * (const Point2D& pt) const {
-    return x_ * pt.x_ + y_ * pt.y_;
-}
-
-bool Point2D::sameLine(const Point2D& l, const Point2D& r) const {
-    // Èıµã¹²ÏßÅĞ¶¨
-    BigPointType crossRet = (*this - l).cross(*this - r);
-    return TernaryFunc(crossRet) == 0;
-}
-
-BigPointType Vector2D::cross(const Vector2D& pt) const {
-    return (BigPointType)x_ * pt.y_ - (BigPointType)y_ * pt.x_;
+MultiplyType Vector2D::cross(const Vector2D& pt) const {
+    return (MultiplyType)x_ * pt.y_ - (MultiplyType)y_ * pt.x_;
 }
 
 bool Point2D::operator<(const Point2D& pt) const {
-    // 1. µÚÒ»¹Ø¼ü×Ö£º y Ğ¡µÄ
-    // 2. µÚ¶ş¹Ø¼ü×Ö£º x Ğ¡µÄ
-    // 3. µÚÈı¹Ø¼ü×Ö£ºÏÂ±êĞ¡µÄ - ÊÊÓÃÓÚÖØ¸´µã
+    // 1. ç¬¬ä¸€å…³é”®å­—ï¼š y å°çš„
+    // 2. ç¬¬äºŒå…³é”®å­—ï¼š x å°çš„
     if (!EQ(y_, pt.y_)) {
         return ST(y_, pt.y_);
     }
-    if (!EQ(x_, pt.x_)) {
-        return ST(x_, pt.x_);
-    }
-    return index_ < pt.index_;
+    return ST(x_, pt.x_);
 }
 
 bool Point2D::operator==(const Point2D& pt) const {
     return (*this - pt).zero();
 }
 
-BigPointType Point2D::distSquare(const Point2D& pt) const {
+MultiplyType Point2D::distSquare(const Point2D& pt) const {
     Point2D t = *this - pt;
     return SQR(t.x_) + SQR(t.y_);
 }
 
 bool Point2D::angleCmp(const Point2D& a, const Point2D& b) {
-    if (fabs(a.angle_ - b.angle_) > eps) {
-        return a.angle_ < b.angle_;
-    }
-    if (fabs(a.distSqr_ - b.distSqr_) > eps) {
+    if (fabs(a.angle_ - b.angle_) < eps) {
         return a.distSqr_ < b.distSqr_;
     }
-    return a.index_ < b.index_;
+    return a.angle_ < b.angle_;
 }
 
 void Point2D::calculateAngle(const Point2D& o) {
     Point2D t = *this - o;
     if (t.zero()) {
-        // ¸ÃÇé¿öÏÂ atan2 ÊÇ undefined µÄ£¬ĞèÒªµ¥¶À´¦Àí
+        // è¯¥æƒ…å†µä¸‹ atan2 æ˜¯ undefined çš„ï¼Œéœ€è¦å•ç‹¬å¤„ç†
         angle_ = 0;
         distSqr_ = 0;
     }
     else {
-        angle_ = atan2(0.0 + t.y_, 0.0 + t.x_); // ÕâÀï y >= 0 ÊÇÄÜ±£Ö¤µÄ£¬ËùÒÔÖµÔÚ [0, PI) Ö®¼ä
+        angle_ = atan2(0.0 + t.y_, 0.0 + t.x_); // è¿™é‡Œ y >= 0 æ˜¯èƒ½ä¿è¯çš„ï¼Œæ‰€ä»¥å€¼åœ¨ [0, PI] ä¹‹é—´
         distSqr_ = distSquare(o);
     }
 }
@@ -181,105 +142,26 @@ void Point2D::read(int idx) {
     index_ = idx;
 }
 
-void Point2D::print() {
-#ifdef INT_POINT
-    printf("%d %d\n", x_, y_);
-#else
-    printf("%lf %lf", x_, y_);
-#endif
-}
-
-PointType Point2D::x() const {
-    return x_;
-}
-
-PointType Point2D::y() const {
-    return y_;
-}
-
 double Point2D::getAngle() const {
     return angle_;
 }
 
-int Point2D::getIndex() const {
-    return index_;
-}
-
-Point2D Point2D::getMinusYPoint() const
-{
-    return Point2D(x_, -y_);
-}
-
-class Segment2D {
-public:
-    Segment2D(){}
-    Segment2D(Point2D from, Point2D to) : from_(from), to_(to) {}
-    BigPointType cross(const Point2D& p) const;
-    bool lineCross(const Segment2D& other) const;
-    bool pointOn(const Point2D& p) const;
-    SegCrossType segCross(const Segment2D& other);
-private:
-    Point2D from_, to_;
-};
-
-// ¶¨µã²æ³Ë
-// Íâ²¿ÕÒÒ»µãp£¬È»ºó¼ÆËã (p-s) X (t-s)
-BigPointType Segment2D::cross(const Point2D& p) const {
-    return (p - from_).cross(to_ - from_);
-}
-
-// ¿çÁ¢²âÑé
-// ½«µ±Ç°Ïß¶Î×÷ÎªÒ»ÌõºÜ³¤µÄÖ±Ïß£¬¼ì²âÏß¶ÎotherÊÇ·ñ¿çÁ¢ÔÚÕâÌõÖ±ÏßµÄÁ½±ß
-bool Segment2D::lineCross(const Segment2D& other) const {
-    return TernaryFunc(cross(other.from_)) * TernaryFunc(cross(other.to_)) == -1;
-}
-
-// µãÊÇ·ñÔÚÏß¶ÎÉÏ
-bool Segment2D::pointOn(const Point2D& p) const {
-    // Âú×ãÁ½¸öÌõ¼ş£º
-    //  1.²æ³ËÎª0£¬    (p-s)¡Á(t-s) == 0
-    //  2.µã³ËÎª-1»ò0£¬(p-s)*(p-t) <= 0
-    return TernaryFunc(cross(p)) == 0 && TernaryFunc((p - from_) * (p - to_)) <= 0;
-}
-
-// Ïß¶ÎÅĞ½»
-// 1.Í¨¹ı¿çÁ¢²âÑé
-// 2.µãÊÇ·ñÔÚÏß¶ÎÉÏ
-SegCrossType Segment2D::segCross(const Segment2D& other) {
-    if (this->lineCross(other) && other.lineCross(*this)) {
-        // Á½´Î¿çÁ¢¶¼³ÉÁ¢£¬Ôò±ØÈ»Ïà½»ÓëÒ»µã
-        return SCT_CROSS;
-    }
-    // ÈÎÒâÒ»ÌõÏß¶ÎµÄÄ³¸ö¶ËµãÊÇ·ñÔÚÆäÖĞÒ»ÌõÏß¶ÎÉÏ£¬ËÄÖÖÇé¿ö
-    if (pointOn(other.from_) || pointOn(other.to_) ||
-        other.pointOn(from_) || other.pointOn(to_)) {
-        return SCT_ENDPOINT_ON;
-    }
-    return SCT_NONE;
-}
-
-
 class Polygon {
 private:
-    void grahamScan_Pre();   // ¼ÆËãÍ¹°üÇ°µÄ×¼±¸¹¤×÷
-    void grahamScan_Post(bool flag, Polygon& ret);  // Ìî³äÍ¹°üµÄµãµ½¸ø¶¨µÄ¶à±ßĞÎ
+    void grahamScan_Pre();   // è®¡ç®—å‡¸åŒ…å‰çš„å‡†å¤‡å·¥ä½œ
 public:
-    bool isPoint() const;                      // ÇóÍêÍ¹°üÒÔºóÅĞ¶ÏÊÇ·ñÊÇÒ»¸öµã
-    bool isLine() const;                       // ÇóÍêÍ¹°üÒÔºóÅĞ¶ÏÊÇ·ñÊÇÒ»ÌõÏß
-    bool isPointIn(const Point2D& pt) const;   // ÅĞ¶ÏµãÊÇ·ñÔÚ¶à±ßĞÎÄÚ£»
-    bool isIntersectWithPolygon(Polygon &o);   // ÅĞ¶ÏÊÇ·ñºÍÁí¸öÒ»¶à±ßĞÎÓĞ½»¼¯£»
+    bool isPoint() const;    // æ±‚å®Œå‡¸åŒ…ä»¥ååˆ¤æ–­æ˜¯å¦æ˜¯ä¸€ä¸ªç‚¹
+    bool isLine() const;     // æ±‚å®Œå‡¸åŒ…ä»¥ååˆ¤æ–­æ˜¯å¦æ˜¯ä¸€æ¡çº¿
     void grahamScan(bool flag, Polygon& ret);
     double area();
     double length();
-    int size();
-    void clear();
-    void addPoint(const Point2D& pt);
+    bool read();
+
 public:
-    // int dp(double l);       // ¸ù¾İ²»Í¬Çé¿öÌá¹©µÄ¿ª·Å½Ó¿Ú
+    bool check();           // æ ¹æ®ä¸åŒæƒ…å†µæä¾›çš„å¼€æ”¾æ£€æŸ¥æ¥å£
 private:
     int n_;
     Point2D point_[MAXP];
-    bool hash_[MAXP];                        // Í¹°üÉÏµÄµã¹şÏ£
     PointIndex stack_[MAXP];
     int top_;
 };
@@ -299,145 +181,49 @@ bool Polygon::isLine() const {
 }
 
 
-bool Polygon::isPointIn(const Point2D& pt) const {
-    Point2D inf(12316543, 132543876);
-    Segment2D judge(pt, inf);
-    int isIn = 0;
-    for (int i = 0; i < n_; ++i) {
-        SegCrossType tp = Segment2D(point_[i], point_[(i + 1) % n_]).segCross(judge);
-        if (tp == SCT_CROSS) {
-            isIn ^= 1;
-        }
-        else if (tp == SCT_ENDPOINT_ON) {
-            // ÔÚ¶à±ßĞÎµÄÒ»Ìõ±ßÉÏ
-            return true;
-        }
-    }
-    return isIn;
-}
-
-bool Polygon::isIntersectWithPolygon(Polygon& o) {
-    // 1. Á½¸ö¶à±ßĞÎµÄ±ßÓĞ½»¼¯£¬·µ»Ø false
-    for (int i = 0; i < n_; ++i) {
-        Segment2D srcSeg(point_[i], point_[i + 1]);
-        for (int j = 0; j < o.n_; ++j) {
-            Segment2D tarSeg(o.point_[j], o.point_[j + 1]);
-            if (srcSeg.segCross(tarSeg) != SCT_NONE) {
-                return false;
-            }
-        }
-    }
-
-    // 2. Ò»¸ö¶à±ßĞÎµÄµãÔÚÁíÒ»¸ö¶à±ßĞÎÄÚ
-    for (int i = 0; i < n_; ++i) {
-        if (o.isPointIn(point_[i])) {
-            return false;
-        }
-    }
-
-    for (int i = 0; i < o.n_; ++i) {
-        if (isPointIn(o.point_[i])) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 void Polygon::grahamScan_Pre()
 {
-    // 1. Ê×ÏÈ½«×îÏÂÃæµÄÄÇ¸öµã£¨Èç¹ûyÏàÍ¬£¬ÔòÈ¡×î×ó±ß£©ÕÒ³öÀ´·Åµ½ point_[0] µÄÎ»ÖÃ
+    // 1. é¦–å…ˆå°†æœ€ä¸‹é¢çš„é‚£ä¸ªç‚¹ï¼ˆå¦‚æœyç›¸åŒï¼Œåˆ™å–æœ€å·¦è¾¹ï¼‰æ‰¾å‡ºæ¥æ”¾åˆ° point_[0] çš„ä½ç½®
     for (int i = 1; i < n_; ++i) {
         if (point_[i] < point_[0]) {
             swap(point_[i], point_[0]);
         }
     }
-    // 2. ¶Ô point_[0] ¼ÆËã¼«½Ç
+    // 2. å¯¹ point_[0] è®¡ç®—æè§’
     for (int i = 1; i < n_; ++i) {
         point_[i].calculateAngle(point_[0]);
     }
-    // 3. ¼«½ÇÅÅĞò
+    // 3. æè§’æ’åº
     sort(point_ + 1, point_ + n_, Point2D::angleCmp);
-
-    // 4. È¥ÖØ
-    int tmpn = 0;
-    for (int i = 0; i < n_; ++i) {
-        if (tmpn && point_[tmpn - 1] == point_[i]) {
-            // ÖØ¸´µã
-        }
-        else {
-            point_[tmpn++] = point_[i];
-        }
-    }
-    n_ = tmpn;
-
-    // 5. ¹¹³É»ØÂ·
-    point_[n_] = point_[0];
 }
 
 
-void Polygon::grahamScan_Post(bool flag, Polygon& ret) {
-    // 1. ±ê¼ÇËùÓĞÍ¹°üÉÏµÄµã
-    memset(hash_, 0, sizeof(hash_));
-    for (int i = 0; i < top_; ++i) {
-        hash_[stack_[i]] = true;
-    }
-
-    // 2. ¿ªÊ¼²åÈëµã¼¯
-    int preidx = -1;
-    ret.clear();
-    for (int i = 0; i < n_; ++i) {
-        if (hash_[i]) {
-            if (flag) {
-                // 2.a ²åÈë (preidx, i) ÖĞµÄ¹²Ïßµã
-                if (preidx != -1) {
-                    for (int j = preidx + 1; j < i; ++j) {
-                        bool bSameLine = point_[j].sameLine(point_[preidx], point_[i]);
-                        if (bSameLine) {
-                            ret.addPoint(point_[j]);
-                        }
-                    }
-                }
-            }
-            // 2.b ²åÈëÍ¹°üÉÏµÄµã
-            ret.addPoint(point_[i]);
-            preidx = i;
-        }
-    }
-    if (ret.isPoint() || ret.isLine()) {
-        return;
-    }
-
-    if (flag) {
-        for (int i = n_ - 1; i >= 1; --i) {
-            if (point_[i].getIndex() == ret.point_[ret.n_ - 1].getIndex()) {
-                continue;
-            }
-            bool bSameLine = point_[i].sameLine(ret.point_[0], ret.point_[ret.n_ - 1]);
-            if (bSameLine) {
-                ret.addPoint(point_[i]);
-            }
-        }
-    }
-    // 3. ¹¹³É»ØÂ·
-    ret.point_[ret.n_] = ret.point_[0];
-}
-
-// flag ÊÇ·ñËãÉÏ±ßÉÏµÄµã¡¢ÖØ¸´µã
+// flag æ˜¯å¦ç®—ä¸Šè¾¹ä¸Šçš„ç‚¹ã€é‡å¤ç‚¹
 void Polygon::grahamScan(bool flag, Polygon& ret) {
-
-    // 1. ÕÒµ½¼«Öµ×ø±êÏµÔ­µã£¬²¢ÇÒ°´ÕÕ¼«½ÇÅÅĞò
+    
+    // æ‰¾åˆ°æå€¼åæ ‡ç³»åŸç‚¹ï¼Œå¹¶ä¸”æŒ‰ç…§æè§’æ’åº
     grahamScan_Pre();
 
-    // 2. Õ»µ×ÓÀÔ¶ÊÇÄÇ¸ö¼«Öµ×ø±êÏµµÄÔ­µã
+    // æ ˆåº•æ°¸è¿œæ˜¯é‚£ä¸ªæå€¼åæ ‡ç³»çš„åŸç‚¹
     top_ = 0;
-    for (int i = 0; i < n_; ++i) {
+    stack_[top_++] = 0;
+    
+    for (int i = 1; i < n_; ++i) {
+        if ((point_[i] - point_[0]).zero()) {
+            // å’ŒåŸç‚¹æœ‰é‡åˆï¼Œå³å¤šç‚¹é‡å¤
+            if (flag) {
+                stack_[top_++] = i;
+            }
+            continue;
+        }
+
         while (top_ >= 2) {
             Point2D p1 = point_[stack_[top_ - 1]] - point_[stack_[top_ - 2]];
             Point2D p2 = point_[i] - point_[stack_[top_ - 2]];
-            BigPointType crossRet = p1.cross(p2);
-
-            if (TernaryFunc(crossRet) <= 0)
+            MultiplyType crossRet = p1.cross(p2);
+            // å¦‚æœé€‰æ‹©è¾¹ä¸Šçš„ç‚¹ï¼Œé‚£ä¹ˆå‰ä¹˜ç»“æœå¤§äºç­‰äº0æ˜¯å…è®¸çš„
+            // å¦‚æœä¸é€‰æ‹©è¾¹ä¸Šçš„ç‚¹ï¼Œé‚£ä¹ˆå‰ä¹˜ç»“æœå¤§äº0æ˜¯å…è®¸çš„
+            if (flag && TernaryFunc(crossRet) < 0 || !flag && TernaryFunc(crossRet) <= 0)
                 --top_;
             else
                 break;
@@ -445,14 +231,36 @@ void Polygon::grahamScan(bool flag, Polygon& ret) {
         stack_[top_++] = i;
     }
 
-    grahamScan_Post(flag, ret);
+    // ç»“æœè¾“å‡º
+    ret.n_ = top_;
+    for (int i = 0; i < top_; ++i) {
+        ret.point_[i] = point_[stack_[i]];
+    }
+
+    if (ret.isPoint() || ret.isLine()) {
+        // æ˜¯ç‚¹æˆ–è€…çº¿çš„æƒ…å†µä¸è¿›è¡Œè¡¥ç‚¹
+        return;
+    }
+
+    // Graham æ‰«æç®—æ³•çš„æ”¹è¿›ï¼Œå¦‚æœè¦è€ƒè™‘è¾¹ä¸Šçš„ç‚¹
+    // é‚£ä¹ˆæœ€åä¸€æ¡å¤šè¾¹å½¢çš„å›è¾¹
+    if (flag) {
+        for (int i = n_ - 1; i >= 0; --i) {
+            if (point_[i] == ret.point_[top_-1]) continue;
+            if (fabs(point_[i].getAngle() - ret.point_[top_ - 1].getAngle()) < eps) {
+                // æè§’ç›¸åŒçš„ç‚¹å¿…é¡»è¡¥å›æ¥
+                ret.point_[ret.n_++] = point_[i];
+            }
+            else break;
+        }
+    }
 }
 
 double Polygon::area() {
     double ans = 0;
     point_[n_] = point_[0];
     for (int i = 1; i < n_; ++i) {
-        ans += (point_[i] - point_[0]).cross(point_[i + 1] - point_[0]);
+        ans += (point_[i] - point_[0]).cross(point_[i+1] - point_[0]);
     }
     return ans / 2;
 }
@@ -462,27 +270,68 @@ double Polygon::length() {
         return 0;
     }
     else if (n_ == 2) {
-        return sqrt(0.0 + point_[1].distSquare(point_[0])) * 2;
+        return sqrt(0.0 + point_[1].distSquare(point_[0]));
     }
     double ans = 0;
     point_[n_] = point_[0];
     for (int i = 0; i < n_; ++i) {
-        ans += sqrt(0.0 + point_[i].distSquare(point_[i + 1]));
+        ans += sqrt( 0.0 + point_[i].distSquare(point_[i + 1]) );
     }
     return ans;
 }
 
-int Polygon::size() {
-    return n_;
+bool Polygon::read() {
+    int ret = scanf("%d", &n_);
+    if (ret == EOF || n_ == 0) {
+        return false;
+    }
+    for (int i = 0; i < n_; ++i) {
+        point_[i].read(i);
+    }
+    return true;
 }
 
-void Polygon::clear() {
-    n_ = 0;
-    top_ = 0;
+bool Polygon::check() {
+    int t = 1;
+    for (int i = 1; i < n_; ++i) {
+        if (point_[i] == point_[i - 1]) {
+        }else {
+            point_[t++] = point_[i];
+        }
+    }
+    n_ = t;
+    
+    point_[n_] = point_[0];
+
+    if (isLine() || isPoint()) {
+        return false;
+    }
+
+    int cur = 0, minv;
+    while (cur < n_) {
+        int cnt = 0;
+        for (int j = cur + 1; j < n_; ++j) {
+            if (TernaryFunc((point_[j] - point_[cur]).cross(point_[j + 1] - point_[cur])) == 0) {
+                cnt++;
+                minv = j;
+            }
+            else break;
+        }
+        if (cnt == 0) return false;
+        cur = minv + 1;
+    }
+    return true;
 }
 
-void Polygon::addPoint(const Point2D& pt) {
-    point_[n_++] = pt;
-}
+Polygon P, Res;
 
-//************************* ¼ÆËã¼¸ºÎ Ä£°å *************************
+int main() {
+    int t;
+    scanf("%d", &t);
+    while (t--) {
+        P.read();
+        P.grahamScan(true, Res);
+        printf("%s\n", Res.check() ? "YES":"NO");
+    }
+    return 0;
+}
